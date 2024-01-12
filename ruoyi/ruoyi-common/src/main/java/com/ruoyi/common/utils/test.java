@@ -9,7 +9,11 @@ package com.ruoyi.common.utils;/**
  * @date 2024/1/12
  */
 public class test {
-    public static void main(String[] args) {
-        //测试代码
+
+    /**
+     * 测试代码上传
+     */
+    public void test(){
+
     }
 }
