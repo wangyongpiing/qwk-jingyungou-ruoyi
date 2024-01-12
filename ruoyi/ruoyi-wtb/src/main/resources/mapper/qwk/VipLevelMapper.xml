@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.qwk.mapper.VipLevelMapper">
+    
+    <resultMap type="VipLevel" id="VipLevelResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="level"    column="level"    />
+        <result property="experience"    column="experience"    />
+        <result property="icon"    column="icon"    />
+        <result property="backgroundUrl"    column="background_url"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectVipLevelVo">
+        select id, name, level, experience, icon, background_url, status, create_by, create_time, update_by, update_time, remark from vip_level
+    </sql>
+
+    <select id="selectVipLevelList" parameterType="VipLevel" resultMap="VipLevelResult">
+        <include refid="selectVipLevelVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="level != null "> and level = #{level}</if>
+            <if test="experience != null "> and experience = #{experience}</if>
+            <if test="icon != null  and icon != ''"> and icon = #{icon}</if>
+            <if test="backgroundUrl != null  and backgroundUrl != ''"> and background_url = #{backgroundUrl}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="createBy != null  and createBy != ''"> and create_by like concat('%', #{createBy}, '%')</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
+            <if test="updateBy != null  and updateBy != ''"> and update_by like concat('%', #{updateBy}, '%')</if>
+            <if test="params.beginUpdateTime != null and params.beginUpdateTime != '' and params.endUpdateTime != null and params.endUpdateTime != ''"> and update_time between #{params.beginUpdateTime} and #{params.endUpdateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectVipLevelById" parameterType="Long" resultMap="VipLevelResult">
+        <include refid="selectVipLevelVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertVipLevel" parameterType="VipLevel" useGeneratedKeys="true" keyProperty="id">
+        insert into vip_level
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="level != null">level,</if>
+            <if test="experience != null">experience,</if>
+            <if test="icon != null">icon,</if>
+            <if test="backgroundUrl != null">background_url,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="level != null">#{level},</if>
+            <if test="experience != null">#{experience},</if>
+            <if test="icon != null">#{icon},</if>
+            <if test="backgroundUrl != null">#{backgroundUrl},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateVipLevel" parameterType="VipLevel">
+        update vip_level
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="level != null">level = #{level},</if>
+            <if test="experience != null">experience = #{experience},</if>
+            <if test="icon != null">icon = #{icon},</if>
+            <if test="backgroundUrl != null">background_url = #{backgroundUrl},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteVipLevelById" parameterType="Long">
+        delete from vip_level where id = #{id}
+    </delete>
+
+    <delete id="deleteVipLevelByIds" parameterType="String">
+        delete from vip_level where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="getAllByStatusVipLevels" resultMap="VipLevelResult">
+        <include refid="selectVipLevelVo"/>
+        where status = '1'
+    </select>
+
+</mapper>

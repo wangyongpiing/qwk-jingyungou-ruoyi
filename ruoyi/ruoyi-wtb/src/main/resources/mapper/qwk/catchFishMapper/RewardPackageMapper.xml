@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.qwk.blindBox.mapper.RewardPackageMapper">
+    
+    <resultMap type="RewardPackage" id="RewardPackageResult">
+        <result property="id"    column="id"    />
+        <result property="packageName"    column="package_name"    />
+        <result property="rewardId"    column="reward_id"    />
+        <result property="weight"    column="weight"    />
+        <result property="rarityLevel"    column="rarity_level"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <collection  property="lootRewards"   javaType="java.util.List"  resultMap="LootRewardResult" />
+    </resultMap>
+
+    <resultMap id="LootRewardResult" type="LootReward">
+        <result property="id"    column="l_id"    />
+        <result property="name"    column="l_name"    />
+        <result property="goodsId"    column="l_goods_id"    />
+        <result property="dropRewardWeight"    column="l_drop_reward_weight"    />
+        <result property="rarityLevel"    column="l_rarity_level" />
+    </resultMap>
+
+
+    <sql id="selectRewardPackageVo">
+        select
+            id, package_name, reward_id, weight,rarity_level, create_by, create_time, update_by, update_time, remark
+        from
+            reward_package
+    </sql>
+
+    <sql id="selectRewardPackageAndLootRewardVo">
+        select
+        r.id, r.package_name, r.reward_id, r.weight,r.rarity_level, r.create_by, r.create_time, r.update_by, r.update_time, r.remark ,
+        l.id as l_id ,l.name as l_name,l.goods_id as l_goods_id,l.rarity_level as l_rarity_level, l.drop_reward_weight as l_drop_reward_weight
+        from
+        reward_package as r
+        left join loot_reward as l on FIND_IN_SET(l.id, r.reward_id)
+    </sql>
+
+    <select id="selectRewardPackageList" parameterType="RewardPackage" resultMap="RewardPackageResult">
+        <include refid="selectRewardPackageVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+            <if test="packageName != null  and packageName != ''"> and package_name like concat('%', #{packageName}, '%')</if>
+            <if test="rewardId != null  and rewardId != ''"> and reward_id like concat('%', #{rewardId}, '%')</if>
+            <if test="weight != null "> and weight = #{weight}</if>
+            <if test="rarityLevel != null  and rarityLevel != ''"> and rarity_level = #{rarityLevel}</if>
+            <if test="createBy != null  and createBy != ''"> and create_by like concat('%', #{createBy}, '%')</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
+            <if test="updateBy != null  and updateBy != ''"> and update_by like concat('%', #{updateBy}, '%')</if>
+            <if test="params.beginUpdateTime != null and params.beginUpdateTime != '' and params.endUpdateTime != null and params.endUpdateTime != ''"> and update_time between #{params.beginUpdateTime} and #{params.endUpdateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectRewardPackageById" parameterType="Long" resultMap="RewardPackageResult">
+        <include refid="selectRewardPackageVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertRewardPackage" parameterType="RewardPackage" useGeneratedKeys="true" keyProperty="id">
+        insert into reward_package
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="packageName != null and packageName != ''">package_name,</if>
+            <if test="rewardId != null and rewardId != ''">reward_id,</if>
+            <if test="weight != null">weight,</if>
+            <if test="rarityLevel != null and rarityLevel != ''">rarity_level,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="packageName != null and packageName != ''">#{packageName},</if>
+            <if test="rewardId != null and rewardId != ''">#{rewardId},</if>
+            <if test="weight != null">#{weight},</if>
+            <if test="rarityLevel != null and rarityLevel != ''">#{rarityLevel},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateRewardPackage" parameterType="RewardPackage">
+        update reward_package
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="packageName != null and packageName != ''">package_name = #{packageName},</if>
+            <if test="rewardId != null and rewardId != ''">reward_id = #{rewardId},</if>
+            <if test="weight != null">weight = #{weight},</if>
+            <if test="rarityLevel != null and rarityLevel != ''">rarity_level = #{rarityLevel},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteRewardPackageById" parameterType="Long">
+        delete from reward_package where id = #{id}
+    </delete>
+
+    <delete id="deleteRewardPackageByIds" parameterType="String">
+        delete from reward_package where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectRewardPackageAndLootReward" parameterType="Long" resultMap="RewardPackageResult">
+        <include refid="selectRewardPackageAndLootRewardVo"/>
+        where r.id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+
+</mapper>

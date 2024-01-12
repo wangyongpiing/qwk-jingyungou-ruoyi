@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.qwk.mapper.InviteRewardsRecordMapper">
+    
+    <resultMap type="InviteRewardsRecord" id="InviteRewardsRecordResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="income"    column="income"    />
+        <result property="sourceId"    column="source_id"    />
+        <result property="sourceName"    column="source_name"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectInviteRewardsRecordVo">
+        select id, user_id, user_name, income, source_id, source_name, create_by, create_time, update_by, update_time, remark from invite_rewards_record
+    </sql>
+
+    <select id="selectInviteRewardsRecordList" parameterType="InviteRewardsRecord" resultMap="InviteRewardsRecordResult">
+        <include refid="selectInviteRewardsRecordVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="income != null "> and income = #{income}</if>
+            <if test="sourceId != null "> and source_id = #{sourceId}</if>
+            <if test="sourceName != null  and sourceName != ''"> and source_name like concat('%', #{sourceName}, '%')</if>
+            <if test="createBy != null  and createBy != ''"> and create_by like concat('%', #{createBy}, '%')</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
+            <if test="updateBy != null  and updateBy != ''"> and update_by like concat('%', #{updateBy}, '%')</if>
+            <if test="params.beginUpdateTime != null and params.beginUpdateTime != '' and params.endUpdateTime != null and params.endUpdateTime != ''"> and update_time between #{params.beginUpdateTime} and #{params.endUpdateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectInviteRewardsRecordById" parameterType="Long" resultMap="InviteRewardsRecordResult">
+        <include refid="selectInviteRewardsRecordVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertInviteRewardsRecord" parameterType="InviteRewardsRecord">
+        insert into invite_rewards_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="userName != null">user_name,</if>
+            <if test="income != null">income,</if>
+            <if test="sourceId != null">source_id,</if>
+            <if test="sourceName != null">source_name,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="income != null">#{income},</if>
+            <if test="sourceId != null">#{sourceId},</if>
+            <if test="sourceName != null">#{sourceName},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateInviteRewardsRecord" parameterType="InviteRewardsRecord">
+        update invite_rewards_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="income != null">income = #{income},</if>
+            <if test="sourceId != null">source_id = #{sourceId},</if>
+            <if test="sourceName != null">source_name = #{sourceName},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteInviteRewardsRecordById" parameterType="Long">
+        delete from invite_rewards_record where id = #{id}
+    </delete>
+
+    <delete id="deleteInviteRewardsRecordByIds" parameterType="String">
+        delete from invite_rewards_record where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--    查询今日收益-->
+    <select id="todayEarnings" parameterType="long" resultType="double">
+        select IFNULL(SUM(income),0) AS income
+        from invite_rewards_record
+        where user_id = #{userId} AND create_time BETWEEN CONCAT(CURDATE(),' 00:00:00') AND CONCAT(CURDATE(),' 23:59:59');
+    </select>
+
+</mapper>

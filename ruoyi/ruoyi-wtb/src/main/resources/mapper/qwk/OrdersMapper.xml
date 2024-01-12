@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.qwk.mapper.OrdersMapper">
+    
+    <resultMap type="Orders" id="OrdersResult">
+        <result property="id"    column="id"    />
+        <result property="orderNumber"    column="order_number"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userPhone"    column="user_phone"    />
+        <result property="nickName"    column="nick_name"    />
+        <result property="goodsId"    column="goods_id"    />
+        <result property="goodsName"    column="goods_name"    />
+        <result property="goodsImage"    column="goods_image"    />
+        <result property="goodsType"    column="goods_type"    />
+        <result property="tDAId"    column="t_d_a_id"    />
+        <result property="price"    column="price"    />
+        <result property="quantity"    column="quantity"    />
+        <result property="costs"    column="costs"    />
+        <result property="integral"    column="integral"    />
+        <result property="paymentAmount"    column="payment_amount"    />
+        <result property="paymentTime"    column="payment_time"    />
+        <result property="paymentMethod"    column="payment_method"    />
+        <result property="status"    column="status"    />
+        <result property="logisticsId"    column="logistics_id"    />
+        <result property="sendTime"    column="send_time"    />
+        <result property="receivingTime"    column="receiving_time"    />
+        <result property="createdBy"    column="CREATED_BY"    />
+        <result property="createdTime"    column="CREATED_TIME"    />
+        <result property="updatedBy"    column="UPDATED_BY"    />
+        <result property="updatedTime"    column="UPDATED_TIME"    />
+        <association property="logistics"    column="id" javaType="Logistics" resultMap="LogisticsResult" />
+        <association property="takeDeliveryAddress"    column="id" javaType="TakeDeliveryAddress" resultMap="TakeDeliveryAddressResult" />
+        <association property="goods"    column="id" javaType="Goods" resultMap="GoodsResult" />
+    </resultMap>
+
+    <resultMap type="Logistics" id="LogisticsResult">
+        <id property="id"    column="l_id"    />
+        <result property="orderNumber"    column="l_order_number"    />
+        <result property="goodsName"    column="l_goods_name"    />
+        <result property="consigneePhone"    column="l_consignee_phone"    />
+        <result property="trackingNumber"    column="l_tracking_number"    />
+        <result property="expressCompany"    column="l_express_company"    />
+        <result property="expressCode"    column="l_express_code"    />
+        <result property="consigneeAddress"    column="l_consignee_Address"    />
+        <result property="logo"    column="l_logo"    />
+    </resultMap>
+
+    <resultMap type="TakeDeliveryAddress" id="TakeDeliveryAddressResult">
+        <result property="id"    column="a_id"    />
+        <result property="userId"    column="a_user_id"    />
+        <result property="consignee"    column="a_consignee"    />
+        <result property="phone"    column="a_phone"    />
+        <result property="area"    column="a_area"    />
+        <result property="address"    column="a_address"    />
+        <result property="zipCode"    column="a_zip_code"    />
+        <result property="isDefault"    column="a_is_default"    />
+        <result property="createBy"    column="a_create_by"    />
+        <result property="createTime"    column="a_create_time"    />
+        <result property="updateBy"    column="a_update_by"    />
+        <result property="updateTime"    column="a_update_time"    />
+        <result property="remark"    column="a_remark"    />
+    </resultMap>
+
+    <resultMap type="Goods" id="GoodsResult">
+        <result property="id"    column="g_id"    />
+        <result property="type"    column="g_type"    />
+        <result property="categoryId"    column="g_category_id"    />
+        <result property="name"    column="g_name"    />
+        <result property="image"    column="g_image"    />
+        <result property="number"    column="g_number"    />
+        <result property="supplier"    column="g_supplier"    />
+        <result property="costPrice"    column="g_cost_price"    />
+        <result property="platformPrice"    column="g_platform_price"    />
+        <result property="cashPrice"    column="g_cash_price"    />
+        <result property="postage"    column="g_postage"    />
+        <result property="soldQuantity"    column="g_sold_quantity"    />
+        <result property="inventory"    column="g_inventory"    />
+        <result property="listingTime"    column="g_listing_time"    />
+        <result property="offShelfTime"    column="g_off_shelf_time"    />
+        <result property="status"    column="g_status"    />
+        <result property="sort"    column="g_sort"    />
+        <result property="isDebris"    column="is_debris"    />
+        <result property="pSId"    column="g_p_s_id"    />
+        <result property="describe"    column="g_describe"    />
+    </resultMap>
+
+<!--select id, order_number, goods_name, goods_image, consignee_name, consignee_phone, tracking_number, express_company, consignee_Address, CREATED_BY, CREATED_TIME, UPDATED_BY, UPDATED_TIME from logistics-->
+    <sql id="selectOrdersVo">
+        select o.id, o.order_number, o.user_id, o.user_phone,o.t_d_a_id, o.nick_name,o.goods_id, o.goods_name, o.goods_image, o.goods_type, o.price, o.quantity, o.costs, o.integral, o.payment_amount, o.payment_time, o.payment_method, o.status, o.logistics_id,o.send_time, o.receiving_time, o.CREATED_BY, o.CREATED_TIME, o.UPDATED_BY, o.UPDATED_TIME ,
+               l.id as l_id, l.order_number as l_order_number, l.goods_name as l_goods_name, l.goods_image as l_goods_image, l.consignee_name as l_consignee_name, l.consignee_phone as l_consignee_phone, l.tracking_number as l_tracking_number, l.express_company as l_express_company,l.express_code as l_express_code, l.consignee_Address as l_consignee_Address,l.logo as l_logo, l.CREATED_BY as l_CREATED_BY, l.CREATED_TIME as l_CREATED_TIME, l.UPDATED_BY as l_UPDATED_BY, l.UPDATED_TIME as l_UPDATED_TIME,
+               a.id as a_id, a.user_id as a_user_id , a.consignee as a_consignee , a.phone as a_phone , a.area as a_area, a.address as a_address, a.zip_code as a_zip_code, a.is_default as a_is_default, a.create_by as a_create_by, a.create_time as a_create_time, a.update_by as a_update_by, a.update_time as a_update_time, a.remark as a_remark,
+                g.`id` as g_id, g.`type` as g_type,g.`category_id` as g_category_id, g.`name` as g_name, g.image as g_image, g.`number` as g_number, g.`supplier` as g_supplier, g.`cost_price` as g_cost_price, g.`platform_price` as g_platform_price, g.`cash_price` as g_cash_price,g.`postage` as g_postage, g.`sold_quantity` as g_sold_quantity, g.`inventory` as g_inventory, g.`listing_time` as g_listing_time, g.`off_shelf_time` as g_off_shelf_time, g.`status` as g_status, g.`sort` as g_sort,g.is_debris as g_is_debris, g.`p_s_id` as g_p_s_id, g.`describe` as g_describe
+        from orders o
+        left join logistics l on o.order_number = l.order_number and o.logistics_id = l.id
+        left join take_delivery_address a on o.t_d_a_id = a.id
+        left join goods g on o.goods_id = g.id
+    </sql>
+
+    <select id="selectOrdersList" parameterType="Orders" resultMap="OrdersResult">
+        <include refid="selectOrdersVo"/>
+        <where>  
+            <if test="orderNumber != null  and orderNumber != ''"> and o.order_number = #{orderNumber}</if>
+            <if test="userId != null "> and o.user_id = #{userId}</if>
+            <if test="userPhone != null  and userPhone != ''"> and o.user_phone like concat('%', #{userPhone}, '%')</if>
+            <if test="nickName != null  and nickName != ''"> and o.nick_name like concat('%', #{nickName}, '%')</if>
+            <if test="goodsId != null "> and o.goods_id = #{goodsId}</if>
+            <if test="goodsName != null  and goodsName != ''"> and o.goods_name like concat('%', #{goodsName}, '%')</if>
+            <if test="goodsImage != null  and goodsImage != ''"> and o.goods_image = #{goodsImage}</if>
+            <if test="goodsType != null "> and o.goods_type = #{goodsType}</if>
+            <if test="tDAId != null "> and o.t_d_a_id = #{tDAId}</if>
+            <if test="price != null  and price != ''"> and o.price = #{price}</if>
+            <if test="quantity != null "> and o.quantity = #{quantity}</if>
+            <if test="costs != null  and costs != ''"> and o.costs = #{costs}</if>
+            <if test="integral != null  and integral != ''"> and o.integral = #{integral}</if>
+            <if test="paymentAmount != null  and paymentAmount != ''"> and o.payment_amount = #{paymentAmount}</if>
+            <if test="params.beginPaymentTime != null and params.beginPaymentTime != '' and params.endPaymentTime != null and params.endPaymentTime != ''"> and o.payment_time between #{params.beginPaymentTime} and #{params.endPaymentTime}</if>
+            <if test="paymentMethod != null "> and o.payment_method = #{paymentMethod}</if>
+            <if test="status != null "> and o.status = #{status}</if>
+            <if test="logisticsId != null "> and o.logistics_id = #{logisticsId}</if>
+            <if test="params.beginSendTime != null and params.beginSendTime != '' and params.endSendTime != null and params.endSendTime != ''"> and o.send_time between #{params.beginSendTime} and #{params.endSendTime}</if>
+            <if test="params.beginReceivingTime != null and params.beginReceivingTime != '' and params.endReceivingTime != null and params.endReceivingTime != ''"> and o.receiving_time between #{params.beginReceivingTime} and #{params.endReceivingTime}</if>
+            <if test="createdBy != null  and createdBy != ''"> and o.CREATED_BY = #{createdBy}</if>
+            <if test="params.beginCreatedTime != null and params.beginCreatedTime != '' and params.endCreatedTime != null and params.endCreatedTime != ''"> and o.CREATED_TIME between #{params.beginCreatedTime} and #{params.endCreatedTime}</if>
+            <if test="updatedBy != null  and updatedBy != ''"> and o.UPDATED_BY = #{updatedBy}</if>
+            <if test="params.beginUpdatedTime != null and params.beginUpdatedTime != '' and params.endUpdatedTime != null and params.endUpdatedTime != ''"> and o.UPDATED_TIME between #{params.beginUpdatedTime} and #{params.endUpdatedTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectOrdersById" parameterType="Long" resultMap="OrdersResult">
+        <include refid="selectOrdersVo"/>
+        where o.id = #{id}
+    </select>
+
+    <insert id="insertOrders" parameterType="Orders" useGeneratedKeys="true" keyProperty="id">
+        insert into orders
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderNumber != null and orderNumber != ''">order_number,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="userPhone != null">user_phone,</if>
+            <if test="nickName != null">nick_name,</if>
+            <if test="goodsId != null">goods_id,</if>
+            <if test="goodsName != null">goods_name,</if>
+            <if test="goodsImage != null">goods_image,</if>
+            <if test="goodsType != null">goods_type,</if>
+            <if test="price != null">price,</if>
+            <if test="quantity != null">quantity,</if>
+            <if test="tDAId != null">t_d_a_id,</if>
+            <if test="costs != null">costs,</if>
+            <if test="integral != null">integral,</if>
+            <if test="paymentAmount != null">payment_amount,</if>
+            <if test="paymentTime != null">payment_time,</if>
+            <if test="paymentMethod != null">payment_method,</if>
+            <if test="status != null">status,</if>
+            <if test="logisticsId != null">logistics_id,</if>
+            <if test="sendTime != null">send_time,</if>
+            <if test="receivingTime != null">receiving_time,</if>
+            <if test="createdBy != null">CREATED_BY,</if>
+            <if test="createdTime != null">CREATED_TIME,</if>
+            <if test="updatedBy != null">UPDATED_BY,</if>
+            <if test="updatedTime != null">UPDATED_TIME,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderNumber != null and orderNumber != ''">#{orderNumber},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="userPhone != null">#{userPhone},</if>
+            <if test="nickName != null">#{nickName},</if>
+            <if test="goodsId != null">#{goodsId},</if>
+            <if test="goodsName != null">#{goodsName},</if>
+            <if test="goodsImage != null">#{goodsImage},</if>
+            <if test="goodsType != null">#{goodsType},</if>
+            <if test="price != null">#{price},</if>
+            <if test="quantity != null">#{quantity},</if>
+            <if test="tDAId != null">#{tDAId},</if>
+            <if test="costs != null">#{costs},</if>
+            <if test="integral != null">#{integral},</if>
+            <if test="paymentAmount != null">#{paymentAmount},</if>
+            <if test="paymentTime != null">#{paymentTime},</if>
+            <if test="paymentMethod != null">#{paymentMethod},</if>
+            <if test="status != null">#{status},</if>
+            <if test="logisticsId != null">#{logisticsId},</if>
+            <if test="sendTime != null">#{sendTime},</if>
+            <if test="receivingTime != null">#{receivingTime},</if>
+            <if test="createdBy != null">#{createdBy},</if>
+            <if test="createdTime != null">#{createdTime},</if>
+            <if test="updatedBy != null">#{updatedBy},</if>
+            <if test="updatedTime != null">#{updatedTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOrders" parameterType="Orders">
+        update orders
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderNumber != null and orderNumber != ''">order_number = #{orderNumber},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="userPhone != null">user_phone = #{userPhone},</if>
+            <if test="nickName != null">nick_name = #{nickName},</if>
+            <if test="goodsId != null">goods_id = #{goodsId},</if>
+            <if test="goodsName != null">goods_name = #{goodsName},</if>
+            <if test="goodsImage != null">goods_image = #{goodsImage},</if>
+            <if test="goodsType != null">goods_type = #{goodsType},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="tDAId != null">t_d_a_id = #{tDAId},</if>
+            <if test="quantity != null">quantity = #{quantity},</if>
+            <if test="costs != null">costs = #{costs},</if>
+            <if test="integral != null">integral = #{integral},</if>
+            <if test="paymentAmount != null">payment_amount = #{paymentAmount},</if>
+            <if test="paymentTime != null">payment_time = #{paymentTime},</if>
+            <if test="paymentMethod != null">payment_method = #{paymentMethod},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="logisticsId != null">logistics_id = #{logisticsId},</if>
+            <if test="sendTime != null">send_time = #{sendTime},</if>
+            <if test="receivingTime != null">receiving_time = #{receivingTime},</if>
+            <if test="createdBy != null">CREATED_BY = #{createdBy},</if>
+            <if test="createdTime != null">CREATED_TIME = #{createdTime},</if>
+            <if test="updatedBy != null">UPDATED_BY = #{updatedBy},</if>
+            <if test="updatedTime != null">UPDATED_TIME = #{updatedTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteOrdersById" parameterType="Long">
+        delete from orders where id = #{id}
+    </delete>
+
+    <delete id="deleteOrdersByIds" parameterType="String">
+        delete from orders where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectOrdersByNumber" parameterType="String" resultMap="OrdersResult">
+        <include refid="selectOrdersVo"/>
+        where o.order_number = #{number}
+    </select>
+
+    <update id="updateOrdersStatus" parameterType="Long">
+        update orders set status = 3  where id = #{id}
+    </update>
+
+    <update id="updateStatusByNumber" parameterType="Long">
+        update orders set status = 2  where order_number = #{orderNumber}
+    </update>
+
+    <select id="selectByStatusCount" parameterType="Long" resultType="integer">
+        select count(0) from orders
+        where user_id = #{userId} and status = #{status}
+    </select>
+
+</mapper>

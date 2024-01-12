@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.qwk.mapper.NewEnergyUserZodiacSignMapper">
+    
+    <resultMap type="NewEnergyUserZodiacSign" id="NewEnergyUserZodiacSignResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="zodiacSignId"    column="zodiac_sign_id"    />
+        <result property="status"    column="status"    />
+        <result property="indexId"    column="index_id"    />
+        <result property="created"    column="created"    />
+    </resultMap>
+
+    <sql id="selectNewEnergyUserZodiacSignVo">
+        select id, user_id, zodiac_sign_id, status, index_id, created from new_energy_user_zodiac_sign
+    </sql>
+
+    <select id="selectNewEnergyUserZodiacSignList" parameterType="NewEnergyUserZodiacSign" resultMap="NewEnergyUserZodiacSignResult">
+        <include refid="selectNewEnergyUserZodiacSignVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="zodiacSignId != null "> and zodiac_sign_id = #{zodiacSignId}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="indexId != null "> and index_id = #{indexId}</if>
+            <if test="created != null "> and created = #{created}</if>
+        </where>
+    </select>
+    
+    <select id="selectNewEnergyUserZodiacSignById" parameterType="String" resultMap="NewEnergyUserZodiacSignResult">
+        <include refid="selectNewEnergyUserZodiacSignVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertNewEnergyUserZodiacSign" parameterType="NewEnergyUserZodiacSign" useGeneratedKeys="true" keyProperty="id">
+        insert into new_energy_user_zodiac_sign
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="zodiacSignId != null">zodiac_sign_id,</if>
+            <if test="status != null">status,</if>
+            <if test="indexId != null">index_id,</if>
+            <if test="created != null">created,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="zodiacSignId != null">#{zodiacSignId},</if>
+            <if test="status != null">#{status},</if>
+            <if test="indexId != null">#{indexId},</if>
+            <if test="created != null">#{created},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNewEnergyUserZodiacSign" parameterType="NewEnergyUserZodiacSign">
+        update new_energy_user_zodiac_sign
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="zodiacSignId != null">zodiac_sign_id = #{zodiacSignId},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="indexId != null">index_id = #{indexId},</if>
+            <if test="created != null">created = #{created},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNewEnergyUserZodiacSignById" parameterType="String">
+        delete from new_energy_user_zodiac_sign where id = #{id}
+    </delete>
+
+    <delete id="deleteNewEnergyUserZodiacSignByIds" parameterType="String">
+        delete from new_energy_user_zodiac_sign where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

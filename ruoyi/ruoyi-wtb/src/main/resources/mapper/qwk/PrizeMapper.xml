@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.qwk.mapper.PrizeMapper">
+
+    <resultMap type="Prize" id="PrizeResult">
+        <result property="id"    column="id"    />
+        <result property="gameId"    column="game_id"    />
+        <result property="prizeType"    column="prize_type"    />
+        <result property="prizeName"    column="prize_name"    />
+        <result property="prizeId"    column="prize_id"    />
+        <result property="prizeValue"    column="prize_value"    />
+        <result property="ratio"    column="ratio"    />
+        <result property="currentNum"    column="current_num"    />
+        <result property="sort"    column="sort"    />
+        <result property="maxNum"    column="max_num"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectPrizeVo">
+        select id, game_id, prize_type, prize_name, prize_id, prize_value, ratio, current_num, sort, max_num, create_by, create_time, update_by, update_time from prize
+    </sql>
+
+    <select id="selectPrizeList" parameterType="Prize" resultMap="PrizeResult">
+        <include refid="selectPrizeVo"/>
+        <where>
+            <if test="gameId != null  and gameId != ''"> and game_id = #{gameId}</if>
+            <if test="prizeType != null "> and prize_type = #{prizeType}</if>
+            <if test="prizeName != null  and prizeName != ''"> and prize_name like concat('%', #{prizeName}, '%')</if>
+            <if test="prizeId != null  and prizeId != ''"> and prize_id = #{prizeId}</if>
+            <if test="prizeValue != null "> and prize_value = #{prizeValue}</if>
+            <if test="ratio != null  and ratio != ''"> and ratio = #{ratio}</if>
+            <if test="currentNum != null "> and current_num = #{currentNum}</if>
+            <if test="sort != null  and sort != ''"> and sort = #{sort}</if>
+            <if test="maxNum != null "> and max_num = #{maxNum}</if>
+        </where>
+        ORDER BY CAST(sort AS UNSIGNED) asc;
+    </select>
+
+    <select id="selectPrizeById" parameterType="Long" resultMap="PrizeResult">
+        <include refid="selectPrizeVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPrize" parameterType="Prize" useGeneratedKeys="true" keyProperty="id">
+        insert into prize
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="gameId != null">game_id,</if>
+            <if test="prizeType != null">prize_type,</if>
+            <if test="prizeName != null">prize_name,</if>
+            <if test="prizeId != null">prize_id,</if>
+            <if test="prizeValue != null">prize_value,</if>
+            <if test="ratio != null">ratio,</if>
+            <if test="currentNum != null">current_num,</if>
+            <if test="sort != null">sort,</if>
+            <if test="maxNum != null">max_num,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="gameId != null">#{gameId},</if>
+            <if test="prizeType != null">#{prizeType},</if>
+            <if test="prizeName != null">#{prizeName},</if>
+            <if test="prizeId != null">#{prizeId},</if>
+            <if test="prizeValue != null">#{prizeValue},</if>
+            <if test="ratio != null">#{ratio},</if>
+            <if test="currentNum != null">#{currentNum},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="maxNum != null">#{maxNum},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePrize" parameterType="Prize">
+        update prize
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="gameId != null">game_id = #{gameId},</if>
+            <if test="prizeType != null">prize_type = #{prizeType},</if>
+            <if test="prizeName != null">prize_name = #{prizeName},</if>
+            <if test="prizeId != null">prize_id = #{prizeId},</if>
+            <if test="prizeValue != null">prize_value = #{prizeValue},</if>
+            <if test="ratio != null">ratio = #{ratio},</if>
+            <if test="currentNum != null">current_num = #{currentNum},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="maxNum != null">max_num = #{maxNum},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePrizeById" parameterType="Long">
+        delete from prize where id = #{id}
+    </delete>
+
+    <delete id="deletePrizeByIds" parameterType="String">
+        delete from prize where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

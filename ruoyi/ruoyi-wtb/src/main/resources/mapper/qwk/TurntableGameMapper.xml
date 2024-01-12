@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.qwk.mapper.TurntableGameMapper">
+    
+    <resultMap type="TurntableGame" id="TurntableGameResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="description"    column="description"    />
+        <result property="dayLimit"    column="day_limit"    />
+        <result property="singleLimit"    column="single_limit"    />
+        <result property="state"    column="state"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectTurntableGameVo">
+        select id, name, start_time, end_time, description, day_limit, single_limit, state, create_by, create_time, update_by, update_time from turntable_game
+    </sql>
+
+    <select id="selectTurntableGameList" parameterType="TurntableGame" resultMap="TurntableGameResult">
+        <include refid="selectTurntableGameVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="endTime != null "> and end_time = #{endTime}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="dayLimit != null "> and day_limit = #{dayLimit}</if>
+            <if test="singleLimit != null "> and single_limit = #{singleLimit}</if>
+            <if test="state != null "> and state = #{state}</if>
+        </where>
+    </select>
+    
+    <select id="selectTurntableGameById" parameterType="Long" resultMap="TurntableGameResult">
+        <include refid="selectTurntableGameVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTurntableGame" parameterType="TurntableGame" useGeneratedKeys="true" keyProperty="id">
+        insert into turntable_game
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="description != null">description,</if>
+            <if test="dayLimit != null">day_limit,</if>
+            <if test="singleLimit != null">single_limit,</if>
+            <if test="state != null">state,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="description != null">#{description},</if>
+            <if test="dayLimit != null">#{dayLimit},</if>
+            <if test="singleLimit != null">#{singleLimit},</if>
+            <if test="state != null">#{state},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTurntableGame" parameterType="TurntableGame">
+        update turntable_game
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="dayLimit != null">day_limit = #{dayLimit},</if>
+            <if test="singleLimit != null">single_limit = #{singleLimit},</if>
+            <if test="state != null">state = #{state},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTurntableGameById" parameterType="Long">
+        delete from turntable_game where id = #{id}
+    </delete>
+
+    <delete id="deleteTurntableGameByIds" parameterType="String">
+        delete from turntable_game where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

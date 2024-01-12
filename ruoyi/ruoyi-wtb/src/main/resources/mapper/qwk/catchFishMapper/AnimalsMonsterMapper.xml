@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.qwk.blindBox.mapper.AnimalsMonsterMapper">
+    
+    <resultMap type="AnimalsMonster" id="AnimalsMonsterResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="attack"    column="attack"    />
+        <result property="hp"    column="hp"    />
+        <result property="speed"    column="speed"    />
+        <result property="fall"    column="fall"    />
+        <result property="skill"    column="skill"    />
+        <result property="honor"    column="honor"    />
+        <result property="avatar"    column="avatar"    />
+        <result property="model"    column="model"    />
+        <result property="size"    column="size"    />
+        <result property="hitAnimation"    column="hit_animation"    />
+        <result property="hitSpecial"    column="hit_special"    />
+        <result property="hitSound"    column="hit_sound"    />
+        <result property="deathAnimation"    column="death_animation"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectAnimalsMonsterVo">
+        select id, name, attack, hp, speed, fall, skill, honor, avatar, model, size, hit_animation, hit_special, hit_sound, death_animation, create_by, create_time, update_by, update_time, remark from animals_monster
+    </sql>
+
+    <select id="selectAnimalsMonsterList" parameterType="AnimalsMonster" resultMap="AnimalsMonsterResult">
+        <include refid="selectAnimalsMonsterVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="attack != null  and attack != ''"> and attack = #{attack}</if>
+            <if test="hp != null  and hp != ''"> and hp = #{hp}</if>
+            <if test="speed != null  and speed != ''"> and speed = #{speed}</if>
+            <if test="fall != null  and fall != ''"> and fall = #{fall}</if>
+            <if test="skill != null  and skill != ''"> and skill = #{skill}</if>
+            <if test="honor != null  and honor != ''"> and honor = #{honor}</if>
+            <if test="avatar != null  and avatar != ''"> and avatar = #{avatar}</if>
+            <if test="model != null  and model != ''"> and model = #{model}</if>
+            <if test="size != null  and size != ''"> and size = #{size}</if>
+            <if test="hitAnimation != null  and hitAnimation != ''"> and hit_animation = #{hitAnimation}</if>
+            <if test="hitSpecial != null  and hitSpecial != ''"> and hit_special = #{hitSpecial}</if>
+            <if test="hitSound != null  and hitSound != ''"> and hit_sound = #{hitSound}</if>
+            <if test="deathAnimation != null  and deathAnimation != ''"> and death_animation = #{deathAnimation}</if>
+            <if test="createBy != null  and createBy != ''"> and create_by like concat('%', #{createBy}, '%')</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectAnimalsMonsterById" parameterType="Long" resultMap="AnimalsMonsterResult">
+        <include refid="selectAnimalsMonsterVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertAnimalsMonster" parameterType="AnimalsMonster" useGeneratedKeys="true" keyProperty="id">
+        insert into animals_monster
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="attack != null">attack,</if>
+            <if test="hp != null">hp,</if>
+            <if test="speed != null">speed,</if>
+            <if test="fall != null">fall,</if>
+            <if test="skill != null">skill,</if>
+            <if test="honor != null">honor,</if>
+            <if test="avatar != null">avatar,</if>
+            <if test="model != null">model,</if>
+            <if test="size != null">size,</if>
+            <if test="hitAnimation != null">hit_animation,</if>
+            <if test="hitSpecial != null">hit_special,</if>
+            <if test="hitSound != null">hit_sound,</if>
+            <if test="deathAnimation != null">death_animation,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="attack != null">#{attack},</if>
+            <if test="hp != null">#{hp},</if>
+            <if test="speed != null">#{speed},</if>
+            <if test="fall != null">#{fall},</if>
+            <if test="skill != null">#{skill},</if>
+            <if test="honor != null">#{honor},</if>
+            <if test="avatar != null">#{avatar},</if>
+            <if test="model != null">#{model},</if>
+            <if test="size != null">#{size},</if>
+            <if test="hitAnimation != null">#{hitAnimation},</if>
+            <if test="hitSpecial != null">#{hitSpecial},</if>
+            <if test="hitSound != null">#{hitSound},</if>
+            <if test="deathAnimation != null">#{deathAnimation},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAnimalsMonster" parameterType="AnimalsMonster">
+        update animals_monster
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="attack != null">attack = #{attack},</if>
+            <if test="hp != null">hp = #{hp},</if>
+            <if test="speed != null">speed = #{speed},</if>
+            <if test="fall != null">fall = #{fall},</if>
+            <if test="skill != null">skill = #{skill},</if>
+            <if test="honor != null">honor = #{honor},</if>
+            <if test="avatar != null">avatar = #{avatar},</if>
+            <if test="model != null">model = #{model},</if>
+            <if test="size != null">size = #{size},</if>
+            <if test="hitAnimation != null">hit_animation = #{hitAnimation},</if>
+            <if test="hitSpecial != null">hit_special = #{hitSpecial},</if>
+            <if test="hitSound != null">hit_sound = #{hitSound},</if>
+            <if test="deathAnimation != null">death_animation = #{deathAnimation},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAnimalsMonsterById" parameterType="Long">
+        delete from animals_monster where id = #{id}
+    </delete>
+
+    <delete id="deleteAnimalsMonsterByIds" parameterType="String">
+        delete from animals_monster where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

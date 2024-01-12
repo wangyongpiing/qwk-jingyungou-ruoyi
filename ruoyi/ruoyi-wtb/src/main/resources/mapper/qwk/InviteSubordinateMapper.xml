@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.qwk.mapper.InviteSubordinateMapper">
+
+    <resultMap type="InviteSubordinate" id="InviteSubordinateResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="inviteeId"    column="invitee_id"    />
+        <result property="inviteeName"    column="invitee_name"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectInviteSubordinateVo">
+        select id, user_id, invitee_id, invitee_name, create_by, create_time, update_by, update_time, remark from invite_subordinate
+    </sql>
+
+    <select id="selectInviteSubordinateList" parameterType="InviteSubordinate" resultMap="InviteSubordinateResult">
+        <include refid="selectInviteSubordinateVo"/>
+        <where>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="inviteeId != null "> and invitee_id = #{inviteeId}</if>
+            <if test="inviteeName != null  and inviteeName != ''"> and invitee_name = #{inviteeName}</if>
+            <if test="createBy != null  and createBy != ''"> and create_by like concat('%', #{createBy}, '%')</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
+            <if test="updateBy != null  and updateBy != ''"> and update_by like concat('%', #{updateBy}, '%')</if>
+            <if test="params.beginUpdateTime != null and params.beginUpdateTime != '' and params.endUpdateTime != null and params.endUpdateTime != ''"> and update_time between #{params.beginUpdateTime} and #{params.endUpdateTime}</if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectInviteSubordinateById" parameterType="Long" resultMap="InviteSubordinateResult">
+        <include refid="selectInviteSubordinateVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertInviteSubordinate" parameterType="InviteSubordinate" useGeneratedKeys="true" keyProperty="id">
+        insert into invite_subordinate
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="inviteeId != null">invitee_id,</if>
+            <if test="inviteeName != null">invitee_name,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="inviteeId != null">#{inviteeId},</if>
+            <if test="inviteeName != null">#{inviteeName},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateInviteSubordinate" parameterType="InviteSubordinate">
+        update invite_subordinate
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="inviteeId != null">invitee_id = #{inviteeId},</if>
+            <if test="inviteeName != null">invitee_name = #{inviteeName},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteInviteSubordinateById" parameterType="Long">
+        delete from invite_subordinate where id = #{id}
+    </delete>
+
+    <delete id="deleteInviteSubordinateByIds" parameterType="String">
+        delete from invite_subordinate where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--今日邀请人数-->
+    <select id="todayPeople" resultType="int" parameterType="long">
+        select COUNT(id)
+        from invite_subordinate
+        where user_id = #{userId} AND create_time BETWEEN CONCAT(CURDATE(),' 00:00:00') AND CONCAT(CURDATE(),' 23:59:59');
+    </select>
+
+    <!--邀请总人数-->
+    <select id="totalPeople" resultType="int" parameterType="long">
+        select COUNT(id)
+        from invite_subordinate
+        where user_id = #{userId}
+    </select>
+
+</mapper>

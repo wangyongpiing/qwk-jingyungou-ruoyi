@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.qwk.mapper.TurntableRedEnvelopeMapper">
+
+    <resultMap type="TurntableRedEnvelope" id="TurntableRedEnvelopeResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userHead"    column="user_head"    />
+        <result property="userName"    column="user_name"    />
+        <result property="isReceive"    column="is_receive"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectTurntableRedEnvelopeVo">
+        select id, user_id, user_head, user_name, is_receive, create_by, create_time, update_by, update_time from turntable_red_envelope
+    </sql>
+
+    <select id="selectTurntableRedEnvelopeList" parameterType="TurntableRedEnvelope" resultMap="TurntableRedEnvelopeResult">
+        <include refid="selectTurntableRedEnvelopeVo"/>
+        <where>
+            <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
+            <if test="userHead != null  and userHead != ''"> and user_head = #{userHead}</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="isReceive != null  and isReceive != ''"> and is_receive = #{isReceive}</if>
+        </where>
+    </select>
+
+    <select id="selectTurntableRedEnvelopeById" parameterType="Long" resultMap="TurntableRedEnvelopeResult">
+        <include refid="selectTurntableRedEnvelopeVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTurntableRedEnvelope" parameterType="TurntableRedEnvelope" useGeneratedKeys="true" keyProperty="id">
+        insert into turntable_red_envelope
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="userHead != null">user_head,</if>
+            <if test="userName != null">user_name,</if>
+            <if test="isReceive != null">is_receive,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="userHead != null">#{userHead},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="isReceive != null">#{isReceive},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTurntableRedEnvelope" parameterType="TurntableRedEnvelope">
+        update turntable_red_envelope
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="userHead != null">user_head = #{userHead},</if>
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="isReceive != null">is_receive = #{isReceive},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTurntableRedEnvelopeById" parameterType="Long">
+        delete from turntable_red_envelope where id = #{id}
+    </delete>
+
+    <delete id="deleteTurntableRedEnvelopeByIds" parameterType="String">
+        delete from turntable_red_envelope where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

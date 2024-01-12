@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.qwk.mapper.ExchangeRatioMapper">
+    
+    <resultMap type="ExchangeRatio" id="ExchangeRatioResult">
+        <result property="id"    column="id"    />
+        <result property="goodsProportion"    column="goods_proportion"    />
+        <result property="integralProportion"    column="integral_proportion"    />
+        <result property="applicable"    column="applicable"    />
+        <result property="enableOrNot"    column="enable_or_not"    />
+        <result property="createdBy"    column="CREATED_BY"    />
+        <result property="createdTime"    column="CREATED_TIME"    />
+        <result property="updatedBy"    column="UPDATED_BY"    />
+        <result property="updatedTime"    column="UPDATED_TIME"    />
+    </resultMap>
+
+    <sql id="selectExchangeRatioVo">
+        select id, goods_proportion, integral_proportion, applicable, enable_or_not, CREATED_BY, CREATED_TIME, UPDATED_BY, UPDATED_TIME from exchange_ratio
+    </sql>
+
+    <select id="selectExchangeRatioList" parameterType="ExchangeRatio" resultMap="ExchangeRatioResult">
+        <include refid="selectExchangeRatioVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+            <if test="goodsProportion != null "> and goods_proportion = #{goodsProportion}</if>
+            <if test="integralProportion != null "> and integral_proportion = #{integralProportion}</if>
+            <if test="applicable != null  and applicable != ''"> and applicable = #{applicable}</if>
+            <if test="enableOrNot != null "> and enable_or_not = #{enableOrNot}</if>
+            <if test="createdBy != null  and createdBy != ''"> and CREATED_BY = #{createdBy}</if>
+            <if test="params.beginCreatedTime != null and params.beginCreatedTime != '' and params.endCreatedTime != null and params.endCreatedTime != ''"> and CREATED_TIME between #{params.beginCreatedTime} and #{params.endCreatedTime}</if>
+            <if test="updatedBy != null  and updatedBy != ''"> and UPDATED_BY = #{updatedBy}</if>
+            <if test="params.beginUpdatedTime != null and params.beginUpdatedTime != '' and params.endUpdatedTime != null and params.endUpdatedTime != ''"> and UPDATED_TIME between #{params.beginUpdatedTime} and #{params.endUpdatedTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectExchangeRatioById" parameterType="Long" resultMap="ExchangeRatioResult">
+        <include refid="selectExchangeRatioVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertExchangeRatio" parameterType="ExchangeRatio" useGeneratedKeys="true" keyProperty="id">
+        insert into exchange_ratio
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="goodsProportion != null">goods_proportion,</if>
+            <if test="integralProportion != null">integral_proportion,</if>
+            <if test="applicable != null and applicable != ''">applicable,</if>
+            <if test="enableOrNot != null">enable_or_not,</if>
+            <if test="createdBy != null">CREATED_BY,</if>
+            <if test="createdTime != null">CREATED_TIME,</if>
+            <if test="updatedBy != null">UPDATED_BY,</if>
+            <if test="updatedTime != null">UPDATED_TIME,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="goodsProportion != null">#{goodsProportion},</if>
+            <if test="integralProportion != null">#{integralProportion},</if>
+            <if test="applicable != null and applicable != ''">#{applicable},</if>
+            <if test="enableOrNot != null">#{enableOrNot},</if>
+            <if test="createdBy != null">#{createdBy},</if>
+            <if test="createdTime != null">#{createdTime},</if>
+            <if test="updatedBy != null">#{updatedBy},</if>
+            <if test="updatedTime != null">#{updatedTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateExchangeRatio" parameterType="ExchangeRatio">
+        update exchange_ratio
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="goodsProportion != null">goods_proportion = #{goodsProportion},</if>
+            <if test="integralProportion != null">integral_proportion = #{integralProportion},</if>
+            <if test="applicable != null and applicable != ''">applicable = #{applicable},</if>
+            <if test="enableOrNot != null">enable_or_not = #{enableOrNot},</if>
+            <if test="createdBy != null">CREATED_BY = #{createdBy},</if>
+            <if test="createdTime != null">CREATED_TIME = #{createdTime},</if>
+            <if test="updatedBy != null">UPDATED_BY = #{updatedBy},</if>
+            <if test="updatedTime != null">UPDATED_TIME = #{updatedTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteExchangeRatioById" parameterType="Long">
+        delete from exchange_ratio where id = #{id}
+    </delete>
+
+    <delete id="deleteExchangeRatioByIds" parameterType="String">
+        delete from exchange_ratio where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

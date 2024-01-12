@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.qwk.mapper.MoneyRatioMapper">
+    
+    <resultMap type="MoneyRatio" id="MoneyRatioResult">
+        <result property="id"    column="id"    />
+        <result property="type"    column="type"    />
+        <result property="gearPosition"    column="gear_position"    />
+        <result property="moneyProportion"    column="money_proportion"    />
+        <result property="unrealProportion"    column="unreal_proportion"    />
+        <result property="createdBy"    column="CREATED_BY"    />
+        <result property="createdTime"    column="CREATED_TIME"    />
+        <result property="updatedBy"    column="UPDATED_BY"    />
+        <result property="updatedTime"    column="UPDATED_TIME"    />
+    </resultMap>
+
+    <sql id="selectMoneyRatioVo">
+        select id, type, gear_position, money_proportion, unreal_proportion, CREATED_BY, CREATED_TIME, UPDATED_BY, UPDATED_TIME from money_ratio
+    </sql>
+
+    <select id="selectMoneyRatioList" parameterType="MoneyRatio" resultMap="MoneyRatioResult">
+        <include refid="selectMoneyRatioVo"/>
+        <where>  
+            <if test="type != null "> and type = #{type}</if>
+            <if test="gearPosition != null  and gearPosition != ''"> and gear_position = #{gearPosition}</if>
+            <if test="moneyProportion != null  and moneyProportion != ''"> and money_proportion = #{moneyProportion}</if>
+            <if test="unrealProportion != null  and unrealProportion != ''"> and unreal_proportion = #{unrealProportion}</if>
+            <if test="createdBy != null  and createdBy != ''"> and CREATED_BY = #{createdBy}</if>
+            <if test="params.beginCreatedTime != null and params.beginCreatedTime != '' and params.endCreatedTime != null and params.endCreatedTime != ''"> and CREATED_TIME between #{params.beginCreatedTime} and #{params.endCreatedTime}</if>
+            <if test="updatedBy != null  and updatedBy != ''"> and UPDATED_BY = #{updatedBy}</if>
+            <if test="params.beginUpdatedTime != null and params.beginUpdatedTime != '' and params.endUpdatedTime != null and params.endUpdatedTime != ''"> and UPDATED_TIME between #{params.beginUpdatedTime} and #{params.endUpdatedTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectMoneyRatioById" parameterType="Long" resultMap="MoneyRatioResult">
+        <include refid="selectMoneyRatioVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertMoneyRatio" parameterType="MoneyRatio" useGeneratedKeys="true" keyProperty="id">
+        insert into money_ratio
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="type != null">type,</if>
+            <if test="gearPosition != null">gear_position,</if>
+            <if test="moneyProportion != null">money_proportion,</if>
+            <if test="unrealProportion != null">unreal_proportion,</if>
+            <if test="createdBy != null">CREATED_BY,</if>
+            <if test="createdTime != null">CREATED_TIME,</if>
+            <if test="updatedBy != null">UPDATED_BY,</if>
+            <if test="updatedTime != null">UPDATED_TIME,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="type != null">#{type},</if>
+            <if test="gearPosition != null">#{gearPosition},</if>
+            <if test="moneyProportion != null">#{moneyProportion},</if>
+            <if test="unrealProportion != null">#{unrealProportion},</if>
+            <if test="createdBy != null">#{createdBy},</if>
+            <if test="createdTime != null">#{createdTime},</if>
+            <if test="updatedBy != null">#{updatedBy},</if>
+            <if test="updatedTime != null">#{updatedTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMoneyRatio" parameterType="MoneyRatio">
+        update money_ratio
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="type != null">type = #{type},</if>
+            <if test="gearPosition != null">gear_position = #{gearPosition},</if>
+            <if test="moneyProportion != null">money_proportion = #{moneyProportion},</if>
+            <if test="unrealProportion != null">unreal_proportion = #{unrealProportion},</if>
+            <if test="createdBy != null">CREATED_BY = #{createdBy},</if>
+            <if test="createdTime != null">CREATED_TIME = #{createdTime},</if>
+            <if test="updatedBy != null">UPDATED_BY = #{updatedBy},</if>
+            <if test="updatedTime != null">UPDATED_TIME = #{updatedTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMoneyRatioById" parameterType="Long">
+        delete from money_ratio where id = #{id}
+    </delete>
+
+    <delete id="deleteMoneyRatioByIds" parameterType="String">
+        delete from money_ratio where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectMoneyRatioByType" parameterType="Long" resultMap="MoneyRatioResult">
+        <include refid="selectMoneyRatioVo"/>
+        where type = #{id}
+    </select>
+
+</mapper>

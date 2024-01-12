@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.qwk.mapper.LogisticsMapper">
+    
+    <resultMap type="Logistics" id="LogisticsResult">
+        <result property="id"    column="id"    />
+        <result property="orderNumber"    column="order_number"    />
+        <result property="goodsName"    column="goods_name"    />
+        <result property="goodsImage"    column="goods_image"    />
+        <result property="consigneeName"    column="consignee_name"    />
+        <result property="consigneePhone"    column="consignee_phone"    />
+        <result property="trackingNumber"    column="tracking_number"    />
+        <result property="expressCompany"    column="express_company"    />
+        <result property="expressCode"    column="express_code"    />
+        <result property="logo"    column="logo"    />
+        <result property="consigneeAddress"    column="consignee_Address"    />
+        <result property="createdBy"    column="CREATED_BY"    />
+        <result property="createdTime"    column="CREATED_TIME"    />
+        <result property="updatedBy"    column="UPDATED_BY"    />
+        <result property="updatedTime"    column="UPDATED_TIME"    />
+    </resultMap>
+
+    <sql id="selectLogisticsVo">
+        select id, order_number, goods_name, goods_image, consignee_name, consignee_phone, tracking_number, express_company, express_code,logo, consignee_Address, CREATED_BY, CREATED_TIME, UPDATED_BY, UPDATED_TIME from logistics
+    </sql>
+
+    <select id="selectLogisticsList" parameterType="Logistics" resultMap="LogisticsResult">
+        <include refid="selectLogisticsVo"/>
+        <where>  
+            <if test="orderNumber != null  and orderNumber != ''"> and order_number like concat('%', #{orderNumber}, '%')</if>
+            <if test="goodsName != null  and goodsName != ''"> and goods_name like concat('%', #{goodsName}, '%')</if>
+            <if test="goodsImage != null  and goodsImage != ''"> and goods_image = #{goodsImage}</if>
+            <if test="consigneeName != null  and consigneeName != ''"> and consignee_name like concat('%', #{consigneeName}, '%')</if>
+            <if test="consigneePhone != null  and consigneePhone != ''"> and consignee_phone like concat('%', #{consigneePhone}, '%')</if>
+            <if test="trackingNumber != null  and trackingNumber != ''"> and tracking_number like concat('%', #{trackingNumber}, '%')</if>
+            <if test="expressCompany != null  and expressCompany != ''"> and express_company like concat('%', #{expressCompany}, '%')</if>
+            <if test="expressCode != null  and expressCode != ''"> and express_code = #{expressCode}</if>
+            <if test="logo != null  and logo != ''"> and logo = #{logo}</if>
+            <if test="consigneeAddress != null  and consigneeAddress != ''"> and consignee_Address like concat('%', #{consigneeAddress}, '%')</if>
+            <if test="createdBy != null  and createdBy != ''"> and CREATED_BY = #{createdBy}</if>
+            <if test="params.beginCreatedTime != null and params.beginCreatedTime != '' and params.endCreatedTime != null and params.endCreatedTime != ''"> and CREATED_TIME between #{params.beginCreatedTime} and #{params.endCreatedTime}</if>
+            <if test="updatedBy != null  and updatedBy != ''"> and UPDATED_BY = #{updatedBy}</if>
+            <if test="params.beginUpdatedTime != null and params.beginUpdatedTime != '' and params.endUpdatedTime != null and params.endUpdatedTime != ''"> and UPDATED_TIME between #{params.beginUpdatedTime} and #{params.endUpdatedTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectLogisticsById" parameterType="Long" resultMap="LogisticsResult">
+        <include refid="selectLogisticsVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertLogistics" parameterType="Logistics" useGeneratedKeys="true" keyProperty="id">
+        insert into logistics
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderNumber != null and orderNumber != ''">order_number,</if>
+            <if test="goodsName != null">goods_name,</if>
+            <if test="goodsImage != null">goods_image,</if>
+            <if test="consigneeName != null">consignee_name,</if>
+            <if test="consigneePhone != null">consignee_phone,</if>
+            <if test="trackingNumber != null">tracking_number,</if>
+            <if test="expressCompany != null">express_company,</if>
+            <if test="expressCode != null">express_code,</if>
+            <if test="logo != null">logo,</if>
+            <if test="consigneeAddress != null">consignee_Address,</if>
+            <if test="createdBy != null">CREATED_BY,</if>
+            <if test="createdTime != null">CREATED_TIME,</if>
+            <if test="updatedBy != null">UPDATED_BY,</if>
+            <if test="updatedTime != null">UPDATED_TIME,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderNumber != null and orderNumber != ''">#{orderNumber},</if>
+            <if test="goodsName != null">#{goodsName},</if>
+            <if test="goodsImage != null">#{goodsImage},</if>
+            <if test="consigneeName != null">#{consigneeName},</if>
+            <if test="consigneePhone != null">#{consigneePhone},</if>
+            <if test="trackingNumber != null">#{trackingNumber},</if>
+            <if test="expressCompany != null">#{expressCompany},</if>
+            <if test="expressCode != null">#{expressCode},</if>
+            <if test="logo != null">#{logo},</if>
+            <if test="consigneeAddress != null">#{consigneeAddress},</if>
+            <if test="createdBy != null">#{createdBy},</if>
+            <if test="createdTime != null">#{createdTime},</if>
+            <if test="updatedBy != null">#{updatedBy},</if>
+            <if test="updatedTime != null">#{updatedTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLogistics" parameterType="Logistics">
+        update logistics
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderNumber != null and orderNumber != ''">order_number = #{orderNumber},</if>
+            <if test="goodsName != null">goods_name = #{goodsName},</if>
+            <if test="goodsImage != null">goods_image = #{goodsImage},</if>
+            <if test="consigneeName != null">consignee_name = #{consigneeName},</if>
+            <if test="consigneePhone != null">consignee_phone = #{consigneePhone},</if>
+            <if test="trackingNumber != null">tracking_number = #{trackingNumber},</if>
+            <if test="expressCompany != null">express_company = #{expressCompany},</if>
+            <if test="expressCode != null">express_code = #{expressCode},</if>
+            <if test="logo != null">logo = #{logo},</if>
+            <if test="consigneeAddress != null">consignee_Address = #{consigneeAddress},</if>
+            <if test="createdBy != null">CREATED_BY = #{createdBy},</if>
+            <if test="createdTime != null">CREATED_TIME = #{createdTime},</if>
+            <if test="updatedBy != null">UPDATED_BY = #{updatedBy},</if>
+            <if test="updatedTime != null">UPDATED_TIME = #{updatedTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLogisticsById" parameterType="Long">
+        delete from logistics where id = #{id}
+    </delete>
+
+    <delete id="deleteLogisticsByIds" parameterType="String">
+        delete from logistics where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectLogisticsByOrderId" parameterType="String" resultMap="LogisticsResult">
+        <include refid="selectLogisticsVo"/>
+        where order_number = #{id}
+    </select>
+
+</mapper>

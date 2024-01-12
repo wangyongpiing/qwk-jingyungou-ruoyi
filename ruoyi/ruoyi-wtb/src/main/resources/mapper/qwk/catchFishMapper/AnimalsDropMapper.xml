@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.qwk.blindBox.mapper.AnimalsDropMapper">
+    
+    <resultMap type="AnimalsDrop" id="AnimalsDropResult">
+        <result property="id"    column="id"    />
+        <result property="serverNum"    column="server_num"    />
+        <result property="personNum"    column="person_num"    />
+        <result property="randomType"    column="random_type"    />
+        <result property="dropType"    column="drop_type"    />
+        <result property="dropContent"    column="drop_content"    />
+        <result property="dropProbability"    column="drop_probability"    />
+        <result property="dropNum"    column="drop_num"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectAnimalsDropVo">
+        select id, server_num, person_num, random_type, drop_type, drop_content, drop_probability, drop_num, create_by, create_time, update_by, update_time, remark from animals_drop
+    </sql>
+
+    <select id="selectAnimalsDropList" parameterType="AnimalsDrop" resultMap="AnimalsDropResult">
+        <include refid="selectAnimalsDropVo"/>
+        <where>  
+            <if test="serverNum != null "> and server_num = #{serverNum}</if>
+            <if test="personNum != null "> and person_num = #{personNum}</if>
+            <if test="randomType != null  and randomType != ''"> and random_type = #{randomType}</if>
+            <if test="dropType != null  and dropType != ''"> and drop_type = #{dropType}</if>
+            <if test="dropContent != null  and dropContent != ''"> and drop_content = #{dropContent}</if>
+            <if test="dropProbability != null  and dropProbability != ''"> and drop_probability = #{dropProbability}</if>
+            <if test="dropNum != null "> and drop_num = #{dropNum}</if>
+            <if test="createBy != null  and createBy != ''"> and create_by like concat('%', #{createBy}, '%')</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectAnimalsDropById" parameterType="Integer" resultMap="AnimalsDropResult">
+        <include refid="selectAnimalsDropVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertAnimalsDrop" parameterType="AnimalsDrop">
+        insert into animals_drop
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="serverNum != null">server_num,</if>
+            <if test="personNum != null">person_num,</if>
+            <if test="randomType != null">random_type,</if>
+            <if test="dropType != null">drop_type,</if>
+            <if test="dropContent != null">drop_content,</if>
+            <if test="dropProbability != null">drop_probability,</if>
+            <if test="dropNum != null">drop_num,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="serverNum != null">#{serverNum},</if>
+            <if test="personNum != null">#{personNum},</if>
+            <if test="randomType != null">#{randomType},</if>
+            <if test="dropType != null">#{dropType},</if>
+            <if test="dropContent != null">#{dropContent},</if>
+            <if test="dropProbability != null">#{dropProbability},</if>
+            <if test="dropNum != null">#{dropNum},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAnimalsDrop" parameterType="AnimalsDrop">
+        update animals_drop
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="serverNum != null">server_num = #{serverNum},</if>
+            <if test="personNum != null">person_num = #{personNum},</if>
+            <if test="randomType != null">random_type = #{randomType},</if>
+            <if test="dropType != null">drop_type = #{dropType},</if>
+            <if test="dropContent != null">drop_content = #{dropContent},</if>
+            <if test="dropProbability != null">drop_probability = #{dropProbability},</if>
+            <if test="dropNum != null">drop_num = #{dropNum},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAnimalsDropById" parameterType="Integer">
+        delete from animals_drop where id = #{id}
+    </delete>
+
+    <delete id="deleteAnimalsDropByIds" parameterType="String">
+        delete from animals_drop where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

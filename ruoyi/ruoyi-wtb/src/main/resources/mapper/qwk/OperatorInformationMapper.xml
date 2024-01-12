@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.qwk.mapper.OperatorInformationMapper">
+
+    <resultMap type="OperatorInformation" id="OperatorInformationResult">
+        <result property="id"    column="id"    />
+        <result property="operatorName"    column="operator_name"    />
+        <result property="phone"    column="phone"    />
+        <result property="wx"    column="wx"    />
+        <result property="idCard"    column="id_card"    />
+        <result property="addresss"    column="addresss"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectOperatorInformationVo">
+        select id, operator_name, phone, wx, id_card,address, create_by, create_time, update_by, update_time from operator_information
+    </sql>
+
+    <select id="selectOperatorInformationList" parameterType="OperatorInformation" resultMap="OperatorInformationResult">
+        <include refid="selectOperatorInformationVo"/>
+        <where>
+            <if test="operatorName != null  and operatorName != ''"> and operator_name like concat('%', #{operatorName}, '%')</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="wx != null  and wx != ''"> and wx = #{wx}</if>
+            <if test="idCard != null  and idCard != ''"> and id_card = #{idCard}</if>
+            <if test="addresss != null  and addresss != ''"> and addresss = #{addresss}</if>
+        </where>
+    </select>
+
+    <select id="selectOperatorInformationById" parameterType="Long" resultMap="OperatorInformationResult">
+        <include refid="selectOperatorInformationVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertOperatorInformation" parameterType="OperatorInformation" useGeneratedKeys="true" keyProperty="id">
+        insert into operator_information
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="operatorName != null">operator_name,</if>
+            <if test="phone != null">phone,</if>
+            <if test="wx != null">wx,</if>
+            <if test="idCard != null">id_card,</if>
+            <if test="addresss != null">addresss,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="operatorName != null">#{operatorName},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="wx != null">#{wx},</if>
+            <if test="idCard != null">#{idCard},</if>
+            <if test="addresss != null">#{addresss},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOperatorInformation" parameterType="OperatorInformation">
+        update operator_information
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="operatorName != null">operator_name = #{operatorName},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="wx != null">wx = #{wx},</if>
+            <if test="idCard != null">id_card = #{idCard},</if>
+            <if test="addresss != null">addresss = #{addresss},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteOperatorInformationById" parameterType="Long">
+        delete from operator_information where id = #{id}
+    </delete>
+
+    <delete id="deleteOperatorInformationByIds" parameterType="String">
+        delete from operator_information where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

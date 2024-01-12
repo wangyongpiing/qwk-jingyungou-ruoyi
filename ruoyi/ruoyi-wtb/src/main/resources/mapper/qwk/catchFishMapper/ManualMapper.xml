@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.qwk.blindBox.mapper.ManualMapper">
+    
+    <resultMap type="Manual" id="ManualResult">
+        <result property="id"    column="id"    />
+        <result property="categoryId"    column="category_id"    />
+        <result property="goodsName"    column="goods_name"    />
+        <result property="goodsImage"    column="goods_image"    />
+        <result property="goodsPrice"    column="goods_price"    />
+        <result property="probability"    column="probability"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectManualVo">
+        select id, category_id, goods_name, goods_image, goods_price, probability, create_by, create_time, update_by, update_time, remark from manual
+    </sql>
+
+    <select id="selectManualList" parameterType="Manual" resultMap="ManualResult">
+        <include refid="selectManualVo"/>
+        <where>  
+            <if test="categoryId != null "> and category_id = #{categoryId}</if>
+            <if test="goodsName != null  and goodsName != ''"> and goods_name like concat('%', #{goodsName}, '%')</if>
+            <if test="goodsImage != null  and goodsImage != ''"> and goods_image = #{goodsImage}</if>
+            <if test="goodsPrice != null  and goodsPrice != ''"> and goods_price = #{goodsPrice}</if>
+            <if test="probability != null  and probability != ''"> and probability = #{probability}</if>
+            <if test="params.low != null and params.tall != null "> and CAST(goods_price AS SIGNED) &gt; #{params.low} and CAST(goods_price AS SIGNED) &lt;= #{params.tall}</if>
+        </where>
+        ORDER BY CAST(goods_price AS DOUBLE) DESC
+    </select>
+    
+    <select id="selectManualById" parameterType="Long" resultMap="ManualResult">
+        <include refid="selectManualVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertManual" parameterType="Manual">
+        insert into manual
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="categoryId != null">category_id,</if>
+            <if test="goodsName != null">goods_name,</if>
+            <if test="goodsImage != null">goods_image,</if>
+            <if test="goodsPrice != null">goods_price,</if>
+            <if test="probability != null">probability,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="categoryId != null">#{categoryId},</if>
+            <if test="goodsName != null">#{goodsName},</if>
+            <if test="goodsImage != null">#{goodsImage},</if>
+            <if test="goodsPrice != null">#{goodsPrice},</if>
+            <if test="probability != null">#{probability},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateManual" parameterType="Manual">
+        update manual
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="categoryId != null">category_id = #{categoryId},</if>
+            <if test="goodsName != null">goods_name = #{goodsName},</if>
+            <if test="goodsImage != null">goods_image = #{goodsImage},</if>
+            <if test="goodsPrice != null">goods_price = #{goodsPrice},</if>
+            <if test="probability != null">probability = #{probability},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteManualById" parameterType="Long">
+        delete from manual where id = #{id}
+    </delete>
+
+    <delete id="deleteManualByIds" parameterType="String">
+        delete from manual where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.qwk.mapper.UserAssetsMapper">
+    
+    <resultMap type="UserAssets" id="UserAssetsResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userPhone"    column="user_phone"    />
+        <result property="nickName"    column="nick_name"    />
+        <result property="type"    column="type"    />
+        <result property="total"    column="total"    />
+        <result property="createdBy"    column="CREATED_BY"    />
+        <result property="createdTime"    column="CREATED_TIME"    />
+        <result property="updatedBy"    column="UPDATED_BY"    />
+        <result property="updatedTime"    column="UPDATED_TIME"    />
+    </resultMap>
+
+    <sql id="selectUserAssetsVo">
+        select id, user_id, user_phone, nick_name, `type`, total, CREATED_BY, CREATED_TIME, UPDATED_BY, UPDATED_TIME from user_assets
+    </sql>
+
+    <select id="selectUserAssetsList" parameterType="UserAssets" resultMap="UserAssetsResult">
+        <include refid="selectUserAssetsVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="userPhone != null  and userPhone != ''"> and user_phone like concat('%', #{userPhone}, '%')</if>
+            <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="total != null  and total != ''"> and total = #{total}</if>
+            <if test="createdBy != null  and createdBy != ''"> and CREATED_BY = #{createdBy}</if>
+            <if test="params.beginCreatedTime != null and params.beginCreatedTime != '' and params.endCreatedTime != null and params.endCreatedTime != ''"> and CREATED_TIME between #{params.beginCreatedTime} and #{params.endCreatedTime}</if>
+            <if test="updatedBy != null  and updatedBy != ''"> and UPDATED_BY = #{updatedBy}</if>
+            <if test="params.beginUpdatedTime != null and params.beginUpdatedTime != '' and params.endUpdatedTime != null and params.endUpdatedTime != ''"> and UPDATED_TIME between #{params.beginUpdatedTime} and #{params.endUpdatedTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectUserAssetsById" parameterType="Long" resultMap="UserAssetsResult">
+        <include refid="selectUserAssetsVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertUserAssets" parameterType="UserAssets" useGeneratedKeys="true" keyProperty="id">
+        insert into user_assets
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="userPhone != null and userPhone != ''">user_phone,</if>
+            <if test="nickName != null">nick_name,</if>
+            <if test="type != null">type,</if>
+            <if test="total != null">total,</if>
+            <if test="createdBy != null">CREATED_BY,</if>
+            <if test="createdTime != null">CREATED_TIME,</if>
+            <if test="updatedBy != null">UPDATED_BY,</if>
+            <if test="updatedTime != null">UPDATED_TIME,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="userPhone != null and userPhone != ''">#{userPhone},</if>
+            <if test="nickName != null">#{nickName},</if>
+            <if test="type != null">#{type},</if>
+            <if test="total != null">#{total},</if>
+            <if test="createdBy != null">#{createdBy},</if>
+            <if test="createdTime != null">#{createdTime},</if>
+            <if test="updatedBy != null">#{updatedBy},</if>
+            <if test="updatedTime != null">#{updatedTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserAssets" parameterType="UserAssets">
+        update user_assets
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="userPhone != null and userPhone != ''">user_phone = #{userPhone},</if>
+            <if test="nickName != null">nick_name = #{nickName},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="total != null">total = #{total},</if>
+            <if test="createdBy != null">CREATED_BY = #{createdBy},</if>
+            <if test="createdTime != null">CREATED_TIME = #{createdTime},</if>
+            <if test="updatedBy != null">UPDATED_BY = #{updatedBy},</if>
+            <if test="updatedTime != null">UPDATED_TIME = #{updatedTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteUserAssetsById" parameterType="Long">
+        delete from user_assets where id = #{id}
+    </delete>
+
+    <delete id="deleteUserAssetsByIds" parameterType="String">
+        delete from user_assets where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectByUserId" parameterType="Long" resultMap="UserAssetsResult">
+        <include refid="selectUserAssetsVo"/>
+        where user_id = #{userId} and `type` = #{type} limit 1
+    </select>
+
+    <update id="updateUserAssetsByUserId" parameterType="UserAssets">
+        update user_assets
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="total != null">total = #{total},</if>
+            <if test="updatedBy != null">UPDATED_BY = #{updatedBy},</if>
+            <if test="updatedTime != null">UPDATED_TIME = #{updatedTime},</if>
+        </trim>
+        where user_id = #{userId} and `type` = #{type}
+    </update>
+
+    <delete id="deleteUserAssetsByUserId" parameterType="Long">
+        delete from user_assets where user_id in
+        <foreach collection="array" item="userId" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </delete>
+
+</mapper>

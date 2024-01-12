@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.qwk.blindBox.mapper.FishingMonsterMapper">
+
+    <resultMap type="FishingMonster" id="FishingMonsterResult">
+        <result property="id"    column="id"    />
+        <result property="nanme"    column="nanme"    />
+        <result property="hp"    column="hp"    />
+        <result property="fallId"    column="fall_id"    />
+        <result property="tall"    column="tall"    />
+        <result property="low"    column="low"    />
+        <result property="weightLow"    column="weight_low"    />
+        <result property="weightCentre"    column="weight_centre"    />
+        <result property="weightTall"    column="weight_tall"    />
+        <result property="paradeMode"    column="parade_mode"    />
+        <result property="paradesNumber"    column="parades_number"    />
+        <result property="modelAnimation"    column="model_animation"    />
+        <result property="deathAnimation"    column="death_animation"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectFishingMonsterVo">
+        select id, nanme, hp, fall_id, tall, low, weight_low, weight_centre, weight_tall,  parade_mode, parades_number, model_animation, death_animation, create_by, create_time, update_by, update_time, remark from fishing_monster
+    </sql>
+
+    <select id="selectFishingMonsterList" parameterType="FishingMonster" resultMap="FishingMonsterResult">
+        <include refid="selectFishingMonsterVo"/>
+        <where>
+            <if test="id != null "> and id = #{id}</if>
+            <if test="nanme != null  and nanme != ''"> and nanme like concat('%', #{nanme}, '%')</if>
+            <if test="hp != null "> and hp = #{hp}</if>
+            <if test="fallId != null  and fallId != ''"> and fall_id = #{fallId}</if>
+            <if test="tall != null  and tall != ''"> and tall = #{tall}</if>
+            <if test="low != null  and low != ''"> and low = #{low}</if>
+            <if test="paradeMode != null "> and parade_mode = #{paradeMode}</if>
+            <if test="paradesNumber != null "> and parades_number = #{paradesNumber}</if>
+            <if test="modelAnimation != null  and modelAnimation != ''"> and model_animation = #{modelAnimation}</if>
+            <if test="deathAnimation != null  and deathAnimation != ''"> and death_animation = #{deathAnimation}</if>
+            <if test="createBy != null  and createBy != ''"> and create_by like concat('%', #{createBy}, '%')</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
+            <if test="updateBy != null  and updateBy != ''"> and update_by like concat('%', #{updateBy}, '%')</if>
+            <if test="params.beginUpdateTime != null and params.beginUpdateTime != '' and params.endUpdateTime != null and params.endUpdateTime != ''"> and update_time between #{params.beginUpdateTime} and #{params.endUpdateTime}</if>
+        </where>
+    </select>
+
+    <select id="selectFishingMonsterById" parameterType="Long" resultMap="FishingMonsterResult">
+        <include refid="selectFishingMonsterVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertFishingMonster" parameterType="FishingMonster" useGeneratedKeys="true" keyProperty="id">
+        insert into fishing_monster
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="nanme != null and nanme != ''">nanme,</if>
+            <if test="hp != null">hp,</if>
+            <if test="fallId != null">fall_id,</if>
+            <if test="tall != null">tall,</if>
+            <if test="low != null">low,</if>
+            <if test="weightLow != null">weight_low,</if>
+            <if test="weightCentre != null">weight_centre,</if>
+            <if test="weightTall != null">weight_tall,</if>
+            <if test="paradeMode != null">parade_mode,</if>
+            <if test="paradesNumber != null">parades_number,</if>
+            <if test="modelAnimation != null">model_animation,</if>
+            <if test="deathAnimation != null">death_animation,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="nanme != null and nanme != ''">#{nanme},</if>
+            <if test="hp != null">#{hp},</if>
+            <if test="fallId != null">#{fallId},</if>
+            <if test="tall != null">#{tall},</if>
+            <if test="low != null">#{low},</if>
+            <if test="weightLow != null">#{weightLow},</if>
+            <if test="weightCentre != null">#{weightCentre},</if>
+            <if test="weightTall != null">#{weightTall},</if>
+            <if test="paradeMode != null">#{paradeMode},</if>
+            <if test="paradesNumber != null">#{paradesNumber},</if>
+            <if test="modelAnimation != null">#{modelAnimation},</if>
+            <if test="deathAnimation != null">#{deathAnimation},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateFishingMonster" parameterType="FishingMonster">
+        update fishing_monster
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="nanme != null and nanme != ''">nanme = #{nanme},</if>
+            <if test="hp != null">hp = #{hp},</if>
+            <if test="fallId != null">fall_id = #{fallId},</if>
+            <if test="tall != null">tall = #{tall},</if>
+            <if test="low != null">low = #{low},</if>
+            <if test="weightLow != null">weight_low = #{weightLow},</if>
+            <if test="weightCentre != null">weight_centre = #{weightCentre},</if>
+            <if test="weightTall != null">weight_tall = #{weightTall},</if>
+            <if test="paradeMode != null">parade_mode = #{paradeMode},</if>
+            <if test="paradesNumber != null">parades_number = #{paradesNumber},</if>
+            <if test="modelAnimation != null">model_animation = #{modelAnimation},</if>
+            <if test="deathAnimation != null">death_animation = #{deathAnimation},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteFishingMonsterById" parameterType="Long">
+        delete from fishing_monster where id = #{id}
+    </delete>
+
+    <delete id="deleteFishingMonsterByIds" parameterType="String">
+        delete from fishing_monster where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="getAllFishingMonster" resultMap="FishingMonsterResult">
+        <include refid="selectFishingMonsterVo"/>
+    </select>
+
+    <select id="getByIds" resultMap="FishingMonsterResult" parameterType="Long">
+        <include refid="selectFishingMonsterVo"/>
+        where id in
+        <foreach item="id" index="index" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="getByTall" resultMap="FishingMonsterResult" parameterType="integer">
+        <include refid="selectFishingMonsterVo"/>
+        where CAST(low AS SIGNED) &gt; #{low} AND CAST(tall AS SIGNED) &lt;= #{tall};
+    </select>
+
+</mapper>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.qwk.mapper.PersonalDailyTaskRecordMapper">
+
+    <resultMap type="PersonalDailyTaskRecord" id="PersonalDailyTaskRecordResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="taskId"    column="task_id"    />
+        <result property="status"    column="status"    />
+        <result property="taskEndTime"    column="task_end_time"    />
+        <result property="taskStartTime"    column="task_start_time"    />
+        <result property="completedQuantity"    column="completed_quantity"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectPersonalDailyTaskRecordVo">
+        select id, user_id, task_id, status, task_end_time, task_start_time, completed_quantity, create_by, create_time, update_by, update_time from personal_daily_task_record
+    </sql>
+
+    <select id="selectPersonalDailyTaskRecordList" parameterType="PersonalDailyTaskRecord" resultMap="PersonalDailyTaskRecordResult">
+        <include refid="selectPersonalDailyTaskRecordVo"/>
+        <where>
+            <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
+            <if test="taskId != null  and taskId != ''"> and task_id = #{taskId}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="taskEndTime != null "> and task_end_time = #{taskEndTime}</if>
+            <if test="taskStartTime != null "> and DATE_FORMAT(task_start_time,'%Y-%m-%d') = DATE_FORMAT(#{taskStartTime},'%Y-%m-%d')</if>
+            <if test="completedQuantity != null  and completedQuantity != ''"> and completed_quantity = #{completedQuantity}</if>
+        </where>
+    </select>
+
+    <!--获取新人任务和每日任务是否生成-->
+    <select id="selectTaskRecordList" parameterType="java.util.Date" resultMap="PersonalDailyTaskRecordResult">
+        select
+            record.id, record.user_id, record.task_id, record.status, record.task_end_time, record.task_start_time, record.completed_quantity, record.create_by, record.create_time, record.update_by, record.update_time
+            from
+            personal_daily_task_record record
+            INNER JOIN personal_tasks tasks on record.task_id = tasks.id
+            where
+            tasks.is_release = '1'
+            and tasks.is_daily = '0'
+            UNION all
+            select
+            record.id, record.user_id, record.task_id, record.status, record.task_end_time, record.task_start_time, record.completed_quantity, record.create_by, record.create_time, record.update_by, record.update_time
+            from
+            personal_daily_task_record record
+            INNER JOIN personal_tasks tasks on record.task_id = tasks.id
+            where
+            tasks.is_release = '1'
+            and tasks.is_daily = '1'
+            and DATE_FORMAT(record.task_start_time,'%Y-%m-%d') = DATE_FORMAT(#{time},'%Y-%m-%d')
+    </select>
+
+    <select id="selectPersonalDailyTaskRecordById" parameterType="Long" resultMap="PersonalDailyTaskRecordResult">
+        <include refid="selectPersonalDailyTaskRecordVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPersonalDailyTaskRecord" parameterType="PersonalDailyTaskRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into personal_daily_task_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="taskId != null">task_id,</if>
+            <if test="status != null">status,</if>
+            <if test="taskEndTime != null">task_end_time,</if>
+            <if test="taskStartTime != null">task_start_time,</if>
+            <if test="completedQuantity != null">completed_quantity,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="taskId != null">#{taskId},</if>
+            <if test="status != null">#{status},</if>
+            <if test="taskEndTime != null">#{taskEndTime},</if>
+            <if test="taskStartTime != null">#{taskStartTime},</if>
+            <if test="completedQuantity != null">#{completedQuantity},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePersonalDailyTaskRecord" parameterType="PersonalDailyTaskRecord">
+        update personal_daily_task_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="taskId != null">task_id = #{taskId},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="taskEndTime != null">task_end_time = #{taskEndTime},</if>
+            <if test="taskStartTime != null">task_start_time = #{taskStartTime},</if>
+            <if test="completedQuantity != null">completed_quantity = #{completedQuantity},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePersonalDailyTaskRecordById" parameterType="Long">
+        delete from personal_daily_task_record where id = #{id}
+    </delete>
+
+    <delete id="deletePersonalDailyTaskRecordByIds" parameterType="String">
+        delete from personal_daily_task_record where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.qwk.mapper.HomepageRotatingPicturesMapper">
+
+    <resultMap type="HomepageRotatingPictures" id="HomepageRotatingPicturesResult">
+        <result property="id"    column="id"    />
+        <result property="pictureName"    column="picture_name"    />
+        <result property="pictureUrl"    column="picture_url"    />
+        <result property="backgroundUrl"    column="background_url"    />
+        <result property="sort"    column="sort"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectHomepageRotatingPicturesVo">
+        select id, picture_name, picture_url,background_url, sort, create_by, create_time, update_by, update_time from homepage_rotating_pictures
+    </sql>
+
+    <select id="selectHomepageRotatingPicturesList" parameterType="HomepageRotatingPictures" resultMap="HomepageRotatingPicturesResult">
+        <include refid="selectHomepageRotatingPicturesVo"/>
+        <where>
+            <if test="pictureName != null  and pictureName != ''"> and picture_name like concat('%', #{pictureName}, '%')</if>
+            <if test="pictureUrl != null  and pictureUrl != ''"> and picture_url = #{pictureUrl}</if>
+            <if test="backgroundUrl != null  and backgroundUrl != ''"> and background_url = #{backgroundUrl}</if>
+            <if test="sort != null  and sort != ''"> and sort = #{sort}</if>
+        </where>
+        order by sort asc
+    </select>
+
+    <select id="selectHomepageRotatingPicturesById" parameterType="Long" resultMap="HomepageRotatingPicturesResult">
+        <include refid="selectHomepageRotatingPicturesVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertHomepageRotatingPictures" parameterType="HomepageRotatingPictures" useGeneratedKeys="true" keyProperty="id">
+        insert into homepage_rotating_pictures
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pictureName != null">picture_name,</if>
+            <if test="pictureUrl != null">picture_url,</if>
+            <if test="backgroundUrl != null">background_url,</if>
+            <if test="sort != null">sort,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="pictureName != null">#{pictureName},</if>
+            <if test="pictureUrl != null">#{pictureUrl},</if>
+            <if test="backgroundUrl != backgroundUrl">#{type},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHomepageRotatingPictures" parameterType="HomepageRotatingPictures">
+        update homepage_rotating_pictures
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="pictureName != null">picture_name = #{pictureName},</if>
+            <if test="pictureUrl != null">picture_url = #{pictureUrl},</if>
+            <if test="backgroundUrl != null">background_url = #{backgroundUrl},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteHomepageRotatingPicturesById" parameterType="Long">
+        delete from homepage_rotating_pictures where id = #{id}
+    </delete>
+
+    <delete id="deleteHomepageRotatingPicturesByIds" parameterType="String">
+        delete from homepage_rotating_pictures where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

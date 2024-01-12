@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.qwk.mapper.SerialCardOrderRecordsMapper">
+
+    <resultMap type="SerialCardOrderRecords" id="SerialCardOrderRecordsResult">
+        <result property="id"    column="id"    />
+        <result property="orderCode"    column="order_code"    />
+        <result property="operatorId"    column="operator_id"    />
+        <result property="operatorName"    column="operator_name"    />
+        <result property="orderNumber"    column="order_number"    />
+        <result property="orderAmount"    column="order_amount"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectSerialCardOrderRecordsVo">
+        select id, order_code, operator_id, operator_name,order_number, order_amount, create_by, create_time, update_by, update_time,remark from serial_card_order_records
+    </sql>
+
+    <select id="selectSerialCardOrderRecordsList" parameterType="SerialCardOrderRecords" resultMap="SerialCardOrderRecordsResult">
+        <include refid="selectSerialCardOrderRecordsVo"/>
+        <where>
+            <if test="orderCode != null  and orderCode != ''"> and order_code = #{orderCode}</if>
+            <if test="operatorId != null  and operatorId != ''"> and operator_id = #{operatorId}</if>
+            <if test="operatorName != null  and operatorName != ''"> and operator_name like concat('%', #{operatorName}, '%')</if>
+            <if test="orderAmount != null  and orderAmount != ''"> and order_amount = #{orderAmount}</if>
+            <if test="params.orderIds!=null and params.orderIds.size()>0">
+            id in
+                <foreach item="id" collection="params.orderIds" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="selectSerialCardOrderRecordsById" parameterType="Long" resultMap="SerialCardOrderRecordsResult">
+        <include refid="selectSerialCardOrderRecordsVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSerialCardOrderRecords" parameterType="SerialCardOrderRecords" useGeneratedKeys="true" keyProperty="id">
+        insert into serial_card_order_records
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderCode != null">order_code,</if>
+            <if test="operatorId != null">operator_id,</if>
+            <if test="operatorName != null">operator_name,</if>
+            <if test="orderNumber != null">order_number,</if>
+            <if test="orderAmount != null">order_amount,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderCode != null">#{orderCode},</if>
+            <if test="operatorId != null">#{operatorId},</if>
+            <if test="operatorName != null">#{operatorName},</if>
+            <if test="orderNumber != null">#{orderNumber},</if>
+            <if test="orderAmount != null">#{orderAmount},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSerialCardOrderRecords" parameterType="SerialCardOrderRecords">
+        update serial_card_order_records
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderCode != null">order_code = #{orderCode},</if>
+            <if test="operatorId != null">operator_id = #{operatorId},</if>
+            <if test="operatorName != null">operator_name = #{operatorName},</if>
+            <if test="orderAmount != null">order_amount = #{orderAmount},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSerialCardOrderRecordsById" parameterType="Long">
+        delete from serial_card_order_records where id = #{id}
+    </delete>
+
+    <delete id="deleteSerialCardOrderRecordsByIds" parameterType="String">
+        delete from serial_card_order_records where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

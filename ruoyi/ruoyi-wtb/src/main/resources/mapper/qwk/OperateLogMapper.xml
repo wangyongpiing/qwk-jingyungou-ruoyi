@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.qwk.mapper.OperateLogMapper">
+    
+    <resultMap type="OperateLog" id="OperateLogResult">
+        <result property="id"    column="id"    />
+        <result property="roleId"    column="role_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="operateId"    column="operate_id"    />
+        <result property="operateName"    column="operate_name"    />
+        <result property="operateState"    column="operate_state"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectOperateLogVo">
+        select id, role_id, user_id, user_name, operate_id, operate_name, operate_state, create_time, remark from operate_log
+    </sql>
+
+    <select id="selectOperateLogList" parameterType="OperateLog" resultMap="OperateLogResult">
+        <include refid="selectOperateLogVo"/>
+        <where>  
+            <if test="roleId != null  and roleId != ''"> and role_id like concat('%', #{roleId}, '%')</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="operateId != null "> and operate_id = #{operateId}</if>
+            <if test="operateName != null  and operateName != ''"> and operate_name like concat('%', #{operateName}, '%')</if>
+            <if test="operateState != null  and operateState != ''"> and operate_state = #{operateState}</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectOperateLogById" parameterType="Long" resultMap="OperateLogResult">
+        <include refid="selectOperateLogVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertOperateLog" parameterType="OperateLog" useGeneratedKeys="true" keyProperty="id">
+        insert into operate_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="roleId != null and roleId != ''">role_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="userName != null">user_name,</if>
+            <if test="operateId != null">operate_id,</if>
+            <if test="operateName != null">operate_name,</if>
+            <if test="operateState != null">operate_state,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="roleId != null and roleId != ''">#{roleId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="operateId != null">#{operateId},</if>
+            <if test="operateName != null">#{operateName},</if>
+            <if test="operateState != null">#{operateState},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOperateLog" parameterType="OperateLog">
+        update operate_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="roleId != null and roleId != ''">role_id = #{roleId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="operateId != null">operate_id = #{operateId},</if>
+            <if test="operateName != null">operate_name = #{operateName},</if>
+            <if test="operateState != null">operate_state = #{operateState},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteOperateLogById" parameterType="Long">
+        delete from operate_log where id = #{id}
+    </delete>
+
+    <delete id="deleteOperateLogByIds" parameterType="String">
+        delete from operate_log where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

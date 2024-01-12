@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.qwk.mapper.GoodsMapper">
+
+    <resultMap type="Goods" id="GoodsResult">
+        <result property="id"    column="id"    />
+        <result property="type"    column="type"    />
+        <result property="categoryId"    column="category_id"    />
+        <result property="name"    column="name"    />
+        <result property="image"    column="image"    />
+        <result property="number"    column="number"    />
+        <result property="supplier"    column="supplier"    />
+        <result property="costPrice"    column="cost_price"    />
+        <result property="platformPrice"    column="platform_price"    />
+        <result property="cashPrice"    column="cash_price"    />
+        <result property="postage"    column="postage"    />
+        <result property="soldQuantity"    column="sold_quantity"    />
+        <result property="inventory"    column="inventory"    />
+        <result property="listingTime"    column="listing_time"    />
+        <result property="offShelfTime"    column="off_shelf_time"    />
+        <result property="status"    column="status"    />
+        <result property="sort"    column="sort"    />
+        <result property="isDebris"    column="is_debris"    />
+        <result property="weight"    column="weight"    />
+        <result property="pSId"    column="p_s_id"    />
+        <result property="describe"    column="describe"    />
+        <result property="createdTime"    column="CREATED_TIME"    />
+        <result property="updatedBy"    column="UPDATED_BY"    />
+        <result property="updatedTime"    column="UPDATED_TIME"    />
+    </resultMap>
+
+    <sql id="selectGoodsVo">
+        select `id`, `type`,`category_id`, `name`, image, `number`, `supplier`, `cost_price`, `platform_price`, `cash_price`,`postage`, `sold_quantity`, `inventory`, `listing_time`, `off_shelf_time`, `status`, `sort`, is_debris,weight, `p_s_id`, `describe`, `CREATED_TIME`, `UPDATED_BY`, `UPDATED_TIME` from goods
+    </sql>
+
+    <select id="selectGoodsList" parameterType="Goods" resultMap="GoodsResult">
+        <include refid="selectGoodsVo"/>
+        <where>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="categoryId != null "> and category_id = #{categoryId}</if>
+            <if test="name != null  and name != ''"> and `name` like concat('%', #{name}, '%')</if>
+            <if test="image != null  and image != ''"> and `image` = #{image}</if>
+            <if test="number != null  and number != ''"> and `number` = #{number}</if>
+            <if test="supplier != null  and supplier != ''"> and `supplier` like concat('%', #{supplier}, '%')</if>
+            <if test="costPrice != null  and costPrice != ''"> and `cost_price` = #{costPrice}</if>
+            <if test="platformPrice != null  and platformPrice != ''"> and `platform_price` = #{platformPrice}</if>
+            <if test="cashPrice != null  and cashPrice != ''"> and cash_price = #{cashPrice}</if>
+            <if test="postage != null  and postage != ''"> and postage = #{postage}</if>
+            <if test="soldQuantity != null  and soldQuantity != ''"> and `sold_quantity` = #{soldQuantity}</if>
+            <if test="inventory != null  and inventory != ''"> and `inventory` = #{inventory}</if>
+            <if test="params.beginListingTime != null and params.beginListingTime != '' and params.endListingTime != null and params.endListingTime != ''"> and `listing_time` between #{params.beginListingTime} and #{params.endListingTime}</if>
+            <if test="params.beginOffShelfTime != null and params.beginOffShelfTime != '' and params.endOffShelfTime != null and params.endOffShelfTime != ''"> and `off_shelf_time` between #{params.beginOffShelfTime} and #{params.endOffShelfTime}</if>
+            <if test="status != null  and status != ''"> and `status` = #{status}</if>
+            <if test="sort != null "> and `sort` = #{sort}</if>
+            <if test="isDebris != null  and isDebris != ''"> and is_debris = #{isDebris}</if>
+            <if test="weight != null  and weight != ''"> and weight = #{weight}</if>
+            <if test="pSId != null and pSId !=''"> and `p_s_id` = #{pSId}</if>
+            <if test="describe != null  and describe != ''"> and `describe` = #{describe}</if>
+            <if test="createdTime != null "> and `CREATED_TIME` = #{createdTime}</if>
+            <if test="updatedBy != null  and updatedBy != ''"> and `UPDATED_BY` = #{updatedBy}</if>
+            <if test="updatedTime != null "> and `UPDATED_TIME` = #{updatedTime}</if>
+            <if test="params.categoryIdList!=null and params.categoryIdList.size()>0">
+                and category_id in
+                <foreach collection="params.categoryIdList" separator="," open="(" close=")"
+                         index="i" item="id">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+        ORDER BY CAST(cash_price AS UNSIGNED) desc
+    </select>
+
+    <select id="selectGoodsById" parameterType="Long" resultMap="GoodsResult">
+        <include refid="selectGoodsVo"/>
+        where `id` = #{id}
+    </select>
+
+    <insert id="insertGoods" parameterType="Goods" useGeneratedKeys="true" keyProperty="id">
+        insert into `goods`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="type != null">`type`,</if>
+            <if test="categoryId != null">category_id,</if>
+            <if test="name != null and name != ''">`name`,</if>
+            <if test="image != null and image != ''">`image`,</if>
+            <if test="number != null and number != ''">`number`,</if>
+            <if test="supplier != null and supplier != ''">`supplier`,</if>
+            <if test="costPrice != null">`cost_price`,</if>
+            <if test="platformPrice != null">`platform_price`,</if>
+            <if test="cashPrice != null">cash_price,</if>
+            <if test="postage != null">postage,</if>
+            <if test="soldQuantity != null">`sold_quantity`,</if>
+            <if test="inventory != null">`inventory`,</if>
+            <if test="listingTime != null">`listing_time`,</if>
+            <if test="offShelfTime != null">`off_shelf_time`,</if>
+            <if test="status != null">`status`,</if>
+            <if test="sort != null">`sort`,</if>
+            <if test="isDebris != null">is_debris,</if>
+            <if test="weight != null">weight,</if>
+            <if test="pSId != null">`p_s_id`,</if>
+            <if test="describe != null">`describe`,</if>
+            <if test="createdTime != null">`CREATED_TIME`,</if>
+            <if test="updatedBy != null">`UPDATED_BY`,</if>
+            <if test="updatedTime != null">`UPDATED_TIME`,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="type != null">#{type},</if>
+            <if test="categoryId != null">#{categoryId},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="image != null and image != ''">#{image},</if>
+            <if test="number != null and number != ''">#{number},</if>
+            <if test="supplier != null and supplier != ''">#{supplier},</if>
+            <if test="costPrice != null">#{costPrice},</if>
+            <if test="platformPrice != null">#{platformPrice},</if>
+            <if test="cashPrice != null">#{cashPrice},</if>
+            <if test="postage != null">#{postage},</if>
+            <if test="soldQuantity != null">#{soldQuantity},</if>
+            <if test="inventory != null">#{inventory},</if>
+            <if test="listingTime != null">#{listingTime},</if>
+            <if test="offShelfTime != null">#{offShelfTime},</if>
+            <if test="status != null">#{status},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="isDebris != null">#{isDebris},</if>
+            <if test="weight != null">#{weight},</if>
+            <if test="pSId != null">#{pSId},</if>
+            <if test="describe != null">#{describe},</if>
+            <if test="createdTime != null">#{createdTime},</if>
+            <if test="updatedBy != null">#{updatedBy},</if>
+            <if test="updatedTime != null">#{updatedTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateGoods" parameterType="Goods">
+        update goods
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="type != null">`type` = #{type},</if>
+            <if test="categoryId != null">category_id = #{categoryId},</if>
+            <if test="name != null and name != ''">`name` = #{name},</if>
+            <if test="image != null and image != ''">`image` = #{image},</if>
+            <if test="number != null and number != ''">`number` = #{number},</if>
+            <if test="supplier != null and supplier != ''">`supplier` = #{supplier},</if>
+            <if test="costPrice != null">`cost_price` = #{costPrice},</if>
+            <if test="platformPrice != null">`platform_price` = #{platformPrice},</if>
+            <if test="cashPrice != null">cash_price = #{cashPrice},</if>
+            <if test="postage != null">`postage` = #{postage},</if>
+            <if test="soldQuantity != null">`sold_quantity` = #{soldQuantity},</if>
+            <if test="inventory != null">`inventory` = #{inventory},</if>
+            <if test="listingTime != null">`listing_time` = #{listingTime},</if>
+            <if test="offShelfTime != null">`off_shelf_time` = #{offShelfTime},</if>
+            <if test="status != null">`status` = #{status},</if>
+            <if test="sort != null">`sort` = #{sort},</if>
+            <if test="isDebris != null">is_debris = #{isDebris},</if>
+            <if test="weight != null">weight = #{weight},</if>
+            <if test="pSId != null">`p_s_id` = #{pSId},</if>
+            <if test="describe != null">`describe` = #{describe},</if>
+            <if test="createdTime != null">`CREATED_TIME` = #{createdTime},</if>
+            <if test="updatedBy != null">`UPDATED_BY` = #{updatedBy},</if>
+            <if test="updatedTime != null">`UPDATED_TIME` = #{updatedTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteGoodsById" parameterType="Long">
+        delete from goods where id = #{id}
+    </delete>
+
+    <delete id="deleteGoodsByIds" parameterType="String">
+        delete from goods where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectHotSellingItem" parameterType="Goods" resultMap="GoodsResult">
+        <include refid="selectGoodsVo"/>
+        WHERE `status` = 1 ORDER BY sold_quantity DESC LIMIT 10
+    </select>
+
+    <select id="selectGoodsByPriceRange" parameterType="integer" resultMap="GoodsResult">
+        <include refid="selectGoodsVo"/>
+        WHERE `type` = 1 AND status = '1' AND CAST(cash_price as float) &gt; #{low} AND CAST(cash_price as float) &lt;= #{tall} OR is_debris = '0';
+    </select>
+
+    <!--查询所有支持碎片的商品-->
+    <select id="selectByIsDebris" resultMap="GoodsResult">
+        <include refid="selectGoodsVo"/>
+        where is_debris = '0'
+    </select>
+
+</mapper>

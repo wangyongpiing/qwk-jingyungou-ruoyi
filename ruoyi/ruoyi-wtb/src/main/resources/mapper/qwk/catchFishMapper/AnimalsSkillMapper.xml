@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.qwk.blindBox.mapper.AnimalsSkillMapper">
+    
+    <resultMap type="AnimalsSkill" id="AnimalsSkillResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="type"    column="type"    />
+        <result property="harm"    column="harm"    />
+        <result property="effect"    column="effect"    />
+        <result property="describe"    column="describe"    />
+        <result property="specialEffects"    column="special_effects"    />
+        <result property="animation"    column="animation"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectAnimalsSkillVo">
+        select id, name, type, harm, effect, describe, special_effects, animation, create_by, create_time, update_by, update_time, remark from animals_skill
+    </sql>
+
+    <select id="selectAnimalsSkillList" parameterType="AnimalsSkill" resultMap="AnimalsSkillResult">
+        <include refid="selectAnimalsSkillVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="harm != null  and harm != ''"> and harm = #{harm}</if>
+            <if test="effect != null  and effect != ''"> and effect = #{effect}</if>
+            <if test="describe != null  and describe != ''"> and describe = #{describe}</if>
+            <if test="specialEffects != null  and specialEffects != ''"> and special_effects = #{specialEffects}</if>
+            <if test="animation != null  and animation != ''"> and animation = #{animation}</if>
+            <if test="createBy != null  and createBy != ''"> and create_by like concat('%', #{createBy}, '%')</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectAnimalsSkillById" parameterType="Long" resultMap="AnimalsSkillResult">
+        <include refid="selectAnimalsSkillVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertAnimalsSkill" parameterType="AnimalsSkill" useGeneratedKeys="true" keyProperty="id">
+        insert into animals_skill
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="type != null">type,</if>
+            <if test="harm != null">harm,</if>
+            <if test="effect != null">effect,</if>
+            <if test="describe != null">describe,</if>
+            <if test="specialEffects != null">special_effects,</if>
+            <if test="animation != null">animation,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="type != null">#{type},</if>
+            <if test="harm != null">#{harm},</if>
+            <if test="effect != null">#{effect},</if>
+            <if test="describe != null">#{describe},</if>
+            <if test="specialEffects != null">#{specialEffects},</if>
+            <if test="animation != null">#{animation},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAnimalsSkill" parameterType="AnimalsSkill">
+        update animals_skill
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="harm != null">harm = #{harm},</if>
+            <if test="effect != null">effect = #{effect},</if>
+            <if test="describe != null">describe = #{describe},</if>
+            <if test="specialEffects != null">special_effects = #{specialEffects},</if>
+            <if test="animation != null">animation = #{animation},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAnimalsSkillById" parameterType="Long">
+        delete from animals_skill where id = #{id}
+    </delete>
+
+    <delete id="deleteAnimalsSkillByIds" parameterType="String">
+        delete from animals_skill where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

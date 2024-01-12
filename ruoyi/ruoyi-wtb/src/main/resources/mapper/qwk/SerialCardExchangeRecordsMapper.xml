@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.qwk.mapper.SerialCardExchangeRecordsMapper">
+    
+    <resultMap type="SerialCardExchangeRecords" id="SerialCardExchangeRecordsResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="cardId"    column="card_id"    />
+        <result property="cardCode"    column="card_code"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectSerialCardExchangeRecordsVo">
+        select id, user_id, user_name, card_id, card_code, create_by, create_time, update_by, update_time from serial_card_exchange_records
+    </sql>
+
+    <select id="selectSerialCardExchangeRecordsList" parameterType="SerialCardExchangeRecords" resultMap="SerialCardExchangeRecordsResult">
+        <include refid="selectSerialCardExchangeRecordsVo"/>
+        <where>  
+            <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="cardId != null  and cardId != ''"> and card_id = #{cardId}</if>
+            <if test="cardCode != null  and cardCode != ''"> and card_code = #{cardCode}</if>
+        </where>
+    </select>
+    
+    <select id="selectSerialCardExchangeRecordsById" parameterType="Long" resultMap="SerialCardExchangeRecordsResult">
+        <include refid="selectSerialCardExchangeRecordsVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSerialCardExchangeRecords" parameterType="SerialCardExchangeRecords" useGeneratedKeys="true" keyProperty="id">
+        insert into serial_card_exchange_records
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="userName != null">user_name,</if>
+            <if test="cardId != null">card_id,</if>
+            <if test="cardCode != null">card_code,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="cardId != null">#{cardId},</if>
+            <if test="cardCode != null">#{cardCode},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSerialCardExchangeRecords" parameterType="SerialCardExchangeRecords">
+        update serial_card_exchange_records
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="cardId != null">card_id = #{cardId},</if>
+            <if test="cardCode != null">card_code = #{cardCode},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSerialCardExchangeRecordsById" parameterType="Long">
+        delete from serial_card_exchange_records where id = #{id}
+    </delete>
+
+    <delete id="deleteSerialCardExchangeRecordsByIds" parameterType="String">
+        delete from serial_card_exchange_records where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

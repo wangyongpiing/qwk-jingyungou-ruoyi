@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.UserFriendsMapper">
+    
+    <resultMap type="UserFriends" id="UserFriendsResult">
+        <result property="userId"    column="user_id"    />
+        <result property="friendsId"    column="friends_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="deleted"    column="deleted"    />
+        <association property="user"    column="user_id" javaType="SysUser" resultMap="SysUserResult" />
+    </resultMap>
+
+    <resultMap type="SysUser" id="SysUserResult">
+        <id     property="userId"       column="user_id"      />
+        <result property="deptId"       column="dept_id"      />
+        <result property="realName"    column="real_name"    />
+        <result property="userName"     column="user_name"    />
+        <result property="nickName"     column="nick_name"    />
+        <result property="email"        column="email"        />
+        <result property="phonenumber"  column="phonenumber"  />
+        <result property="sex"          column="sex"          />
+        <result property="avatar"       column="avatar"       />
+        <result property="password"     column="password"     />
+        <result property="status"       column="status"       />
+        <result property="delFlag"      column="del_flag"     />
+        <result property="loginIp"      column="login_ip"     />
+        <result property="loginDate"    column="login_date"   />
+        <result property="createBy"     column="create_by"    />
+        <result property="createTime"   column="create_time"  />
+        <result property="updateBy"     column="update_by"    />
+        <result property="updateTime"   column="update_time"  />
+        <result property="remark"       column="remark"       />
+        <result property="wechat"    column="wechat"    />
+        <result property="idCard"    column="id_card"    />
+    </resultMap>
+
+    <sql id="selectUserFriendsVo">
+        select  u.user_name, u.nick_name, u.email, u.avatar, u.phonenumber, u.sex, u.status, u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time user_create_time, u.remark, u.id_card ,u.wechat ,u.real_name,
+                f.create_time,f.deleted
+        from user_friends f
+		left join sys_user u on  f.friends_id = u.user_id
+    </sql>
+
+    <select id="selectUserFriendsList" parameterType="UserFriends" resultMap="UserFriendsResult">
+        <include refid="selectUserFriendsVo"/>
+        <where>  
+            <if test="userId != null "> and f.user_id = #{userId}</if>
+            <if test="friendsId != null  and friendsId != ''"> and f.friends_id = #{friendsId}</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and f.create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
+            <if test="deleted != null "> and f.deleted = #{deleted}</if>
+            and f.deleted = 1
+        </where>
+    </select>
+    
+    <select id="selectUserFriendsByUserId" parameterType="Long" resultMap="UserFriendsResult">
+        <include refid="selectUserFriendsVo"/>
+        where user_id = #{userId}
+    </select>
+        
+    <insert id="insertUserFriends" parameterType="UserFriends">
+        insert into user_friends
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="friendsId != null and friendsId != ''">friends_id,</if>
+            <if test="deleted != null">deleted,</if>
+            create_time
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="friendsId != null and friendsId != ''">#{friendsId},</if>
+            <if test="deleted != null">#{deleted},</if>
+            sysdate()
+         </trim>
+    </insert>
+
+    <update id="updateUserFriends" parameterType="UserFriends">
+        update user_friends
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="friendsId != null and friendsId != ''">friends_id = #{friendsId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="deleted != null">deleted = #{deleted},</if>
+        </trim>
+        where user_id = #{userId}
+    </update>
+
+    <delete id="deleteUserFriendsByUserId" parameterType="Long">
+        delete from user_friends where user_id = #{userId}
+    </delete>
+
+    <delete id="deleteUserFriendsByUserIds" parameterType="String">
+        delete from user_friends where user_id in 
+        <foreach item="userId" collection="array" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </delete>
+
+    <select id="getFriendsCount" parameterType="Long" resultType="Integer">
+        SELECT COUNT(0) FROM user_friends
+        where user_id = #{userId}
+    </select>
+
+    <delete id="deleteUserFriends">
+        delete from user_friends where user_id = #{userId} and friends_id = #{friendsId}
+    </delete>
+
+</mapper>

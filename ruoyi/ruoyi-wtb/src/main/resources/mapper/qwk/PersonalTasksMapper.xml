@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.qwk.mapper.PersonalTasksMapper">
+
+    <resultMap type="PersonalTasks" id="PersonalTasksResult">
+        <result property="id"    column="id"    />
+        <result property="gameId"    column="game_id"    />
+        <result property="typeCode"    column="type_code"    />
+        <result property="taskName"    column="task_name"    />
+        <result property="isRelease"    column="is_release"    />
+        <result property="reward"    column="reward"    />
+        <result property="rewardType"    column="reward_type"    />
+        <result property="taskCount"    column="task_count"    />
+        <result property="sort"    column="sort"    />
+        <result property="isDaily"    column="is_daily"    />
+        <result property="taskCode"    column="task_code"    />
+        <result property="gameUrl"    column="game_url"    />
+        <result property="completedQuantity"    column="completed_quantity"    />
+        <result property="taskStatus"    column="status"    />
+        <result property="taskCompleteType"    column="task_complete_type"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="remark2"    column="remark2"    />
+    </resultMap>
+
+    <sql id="selectPersonalTasksVo">
+        select id, game_id, type_code, task_name, is_release, reward,is_daily,task_code, reward_type, task_count, sort,task_complete_type,create_by, create_time, update_by, update_time,remark,remark2 from personal_tasks
+    </sql>
+
+    <select id="selectPersonalTasksList" parameterType="PersonalTasks" resultMap="PersonalTasksResult">
+        <include refid="selectPersonalTasksVo"/>
+        <where>
+            <if test="id != null  and id != ''"> and id = #{id}</if>
+            <if test="gameId != null  and gameId != ''"> and game_id = #{gameId}</if>
+            <if test="typeCode != null  and typeCode != ''"> and type_code = #{typeCode}</if>
+            <if test="taskName != null  and taskName != ''"> and task_name like concat('%', #{taskName}, '%')</if>
+            <if test="isRelease != null  and isRelease != ''"> and is_release = #{isRelease}</if>
+            <if test="reward != null "> and reward = #{reward}</if>
+            <if test="rewardType != null  and rewardType != ''"> and reward_type = #{rewardType}</if>
+            <if test="taskCount != null "> and task_count = #{taskCount}</if>
+            <if test="isDaily != null "> and is_daily = #{isDaily}</if>
+            <if test="taskCode != null "> and task_code = #{taskCode}</if>
+        </where>
+        order by sort asc
+    </select>
+
+    <select id="selectUserTasksList" parameterType="PersonalTasks" resultMap="PersonalTasksResult">
+        SELECT
+        task.id,
+        task.game_id,
+        task.type_code,
+        task.task_name,
+        task.remark,
+        task.remark2,
+        task.is_release,
+        task.reward,
+        task.is_daily,
+        task.task_code,
+        task.reward_type,
+        task.task_count,
+        task.sort,
+        task.create_by,
+        task.create_time,
+        task.update_by,
+        task.update_time,
+        task.task_complete_type,
+        game.game_url,
+        daily.completed_quantity,
+        daily.status
+        FROM
+        personal_daily_task_record daily
+        inner join personal_tasks task on task.id = daily.task_id
+        left join homepage_game game on game.id = task.game_id
+        <where>
+            <if test="gameId != null  and gameId != ''"> and task.game_id = #{gameId}</if>
+            <if test="typeCode != null  and typeCode != ''"> and task.type_code = #{typeCode}</if>
+            <if test="taskName != null  and taskName != ''"> and task.task_name like concat('%', #{taskName}, '%')</if>
+            <if test="isRelease != null  and isRelease != ''"> and task.is_release = #{isRelease}</if>
+            <if test="reward != null "> and task.reward = #{reward}</if>
+            <if test="rewardType != null  and rewardType != ''"> and task.reward_type = #{rewardType}</if>
+            <if test="taskCount != null "> and task.task_count = #{taskCount}</if>
+            <if test="isDaily != null "> and task.is_daily = #{isDaily}</if>
+            <if test="taskCode != null "> and task.task_code = #{taskCode}</if>
+            <if test="userId != null "> and daily.user_id = #{userId}</if>
+            <if test="startTime != null "> and DATE_FORMAT(daily.task_start_time,'%Y-%m-%d') = DATE_FORMAT(#{startTime},'%Y-%m-%d')</if>
+        </where>
+        order by sort asc
+    </select>
+
+    <select id="selectPersonalTasksById" parameterType="Long" resultMap="PersonalTasksResult">
+        <include refid="selectPersonalTasksVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPersonalTasks" parameterType="PersonalTasks" useGeneratedKeys="true" keyProperty="id">
+        insert into personal_tasks
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="gameId != null">game_id,</if>
+            <if test="typeCode != null">type_code,</if>
+            <if test="taskName != null">task_name,</if>
+            <if test="isRelease != null">is_release,</if>
+            <if test="reward != null">reward,</if>
+            <if test="rewardType != null">reward_type,</if>
+            <if test="taskCount != null">task_count,</if>
+            <if test="sort != null">sort,</if>
+            <if test="isDaily != null">is_daily,</if>
+            <if test="taskCode != null">task_code,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="gameId != null">#{gameId},</if>
+            <if test="typeCode != null">#{typeCode},</if>
+            <if test="taskName != null">#{taskName},</if>
+            <if test="isRelease != null">#{isRelease},</if>
+            <if test="reward != null">#{reward},</if>
+            <if test="rewardType != null">#{rewardType},</if>
+            <if test="taskCount != null">#{taskCount},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="isDaily != null">#{isDaily},</if>
+            <if test="taskCode != null">#{taskCode},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePersonalTasks" parameterType="PersonalTasks">
+        update personal_tasks
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="gameId != null">game_id = #{gameId},</if>
+            <if test="typeCode != null">type_code = #{typeCode},</if>
+            <if test="taskName != null">task_name = #{taskName},</if>
+            <if test="isRelease != null">is_release = #{isRelease},</if>
+            <if test="reward != null">reward = #{reward},</if>
+            <if test="rewardType != null">reward_type = #{rewardType},</if>
+            <if test="taskCount != null">task_count = #{taskCount},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="isDaily != null">is_daily = #{isDaily},</if>
+            <if test="taskCode != null">task_code = #{taskCode},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePersonalTasksById" parameterType="Long">
+        delete from personal_tasks where id = #{id}
+    </delete>
+
+    <delete id="deletePersonalTasksByIds" parameterType="String">
+        delete from personal_tasks where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

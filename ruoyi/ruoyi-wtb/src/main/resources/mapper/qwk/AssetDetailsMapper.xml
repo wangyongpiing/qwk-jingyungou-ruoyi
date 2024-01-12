@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.qwk.mapper.AssetDetailsMapper">
+
+    <resultMap type="AssetDetails" id="AssetDetailsResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userPhone"    column="user_phone"    />
+        <result property="type"    column="type"    />
+        <result property="image"    column="image"    />
+        <result property="addOrSubtract"    column="add_or_subtract"    />
+        <result property="records"    column="records"    />
+        <result property="balance"    column="balance"    />
+        <result property="notes"    column="notes"    />
+        <result property="createdBy"    column="CREATED_BY"    />
+        <result property="createdTime"    column="CREATED_TIME"    />
+        <result property="updatedBy"    column="UPDATED_BY"    />
+        <result property="updatedTime"    column="UPDATED_TIME"    />
+    </resultMap>
+
+    <sql id="selectAssetDetailsVo">
+        select id, user_id, user_phone, `type`, image, add_or_subtract, records, balance, notes, CREATED_BY, CREATED_TIME, UPDATED_BY, UPDATED_TIME from asset_details
+    </sql>
+
+    <select id="selectAssetDetailsList" parameterType="AssetDetails" resultMap="AssetDetailsResult">
+        <include refid="selectAssetDetailsVo"/>
+        <where>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="userPhone != null  and userPhone != ''"> and user_phone like concat('%', #{userPhone}, '%')</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="image != null  and image != ''"> and image = #{image}</if>
+            <if test="addOrSubtract != null  and addOrSubtract != ''"> and add_or_subtract = #{addOrSubtract}</if>
+            <if test="records != null  and records != ''"> and records = #{records}</if>
+            <if test="params.beginBalance != null and params.beginBalance != '' and params.endBalance != null and params.endBalance != ''"> and balance between #{params.beginBalance} and #{params.endBalance}</if>
+            <if test="notes != null  and notes != ''"> and notes = #{notes}</if>
+            <if test="createdBy != null  and createdBy != ''"> and CREATED_BY = #{createdBy}</if>
+            <if test="params.beginCreatedTime != null and params.beginCreatedTime != '' and params.endCreatedTime != null and params.endCreatedTime != ''"> and CREATED_TIME between #{params.beginCreatedTime} and #{params.endCreatedTime}</if>
+            <if test="updatedBy != null  and updatedBy != ''"> and UPDATED_BY = #{updatedBy}</if>
+            <if test="params.beginUpdatedTime != null and params.beginUpdatedTime != '' and params.endUpdatedTime != null and params.endUpdatedTime != ''"> and UPDATED_TIME between #{params.beginUpdatedTime} and #{params.endUpdatedTime}</if>
+            <if test="params.typeList!=null and params.typeList.size()>0">
+                and type in
+                <foreach collection="params.typeList" separator="," open="(" close=")"
+                         index="i" item="id">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+        order by CREATED_TIME desc
+    </select>
+
+    <select id="selectAssetDetailsById" parameterType="Long" resultMap="AssetDetailsResult">
+        <include refid="selectAssetDetailsVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertAssetDetails" parameterType="AssetDetails" useGeneratedKeys="true" keyProperty="id">
+        insert into asset_details
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="userPhone != null ">user_phone,</if>
+            <if test="type != null">`type`,</if>
+            <if test="image != null">image,</if>
+            <if test="addOrSubtract != null">add_or_subtract,</if>
+            <if test="records != null">records,</if>
+            <if test="balance != null">balance,</if>
+            <if test="notes != null">notes,</if>
+            <if test="createdBy != null">CREATED_BY,</if>
+            <if test="createdTime != null">CREATED_TIME,</if>
+            <if test="updatedBy != null">UPDATED_BY,</if>
+            <if test="updatedTime != null">UPDATED_TIME,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="userPhone != null ">#{userPhone},</if>
+            <if test="type != null">#{type},</if>
+            <if test="image != null">#{image},</if>
+            <if test="addOrSubtract != null">#{addOrSubtract},</if>
+            <if test="records != null">#{records},</if>
+            <if test="balance != null">#{balance},</if>
+            <if test="notes != null">#{notes},</if>
+            <if test="createdBy != null">#{createdBy},</if>
+            <if test="createdTime != null">#{createdTime},</if>
+            <if test="updatedBy != null">#{updatedBy},</if>
+            <if test="updatedTime != null">#{updatedTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateAssetDetails" parameterType="AssetDetails">
+        update asset_details
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="userPhone != null and userPhone != ''">user_phone = #{userPhone},</if>
+            <if test="type != null">`type` = #{type},</if>
+            <if test="image != null">image = #{image},</if>
+            <if test="addOrSubtract != null">add_or_subtract = #{addOrSubtract},</if>
+            <if test="records != null">records = #{records},</if>
+            <if test="balance != null">balance = #{balance},</if>
+            <if test="notes != null">notes = #{notes},</if>
+            <if test="createdBy != null">CREATED_BY = #{createdBy},</if>
+            <if test="createdTime != null">CREATED_TIME = #{createdTime},</if>
+            <if test="updatedBy != null">UPDATED_BY = #{updatedBy},</if>
+            <if test="updatedTime != null">UPDATED_TIME = #{updatedTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAssetDetailsById" parameterType="Long">
+        delete from asset_details where id = #{id}
+    </delete>
+
+    <delete id="deleteAssetDetailsByIds" parameterType="String">
+        delete from asset_details where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

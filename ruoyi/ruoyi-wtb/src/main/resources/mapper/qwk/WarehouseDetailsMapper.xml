@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.qwk.mapper.WarehouseDetailsMapper">
+    <resultMap type="WarehouseDetails" id="WarehouseDetailsResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="wid"    column="wid"    />
+        <result property="ordersId"    column="orders_id"    />
+        <result property="goodsId"    column="goods_id"    />
+        <result property="type"    column="type"    />
+        <result property="goodsImage"    column="goods_image"    />
+        <result property="goodsName"    column="goods_name"    />
+        <result property="source"    column="source"    />
+        <result property="quantity"    column="quantity"    />
+        <result property="price"    column="price"    />
+        <result property="cashPrice"    column="cash_price"    />
+        <result property="state"    column="state"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="remark"    column="remark"    />
+        <result property="isNovice"    column="is_novice"    />
+        <result property="assistanceNum"    column="assistance_num"    />
+        <result property="virtualProductType"    column="virtual_product_type"    />
+        <association property="goods"    column="id" javaType="Goods" resultMap="GoodsResult" />
+    </resultMap>
+
+    <resultMap type="Goods" id="GoodsResult">
+        <result property="id"    column="g_id"    />
+        <result property="type"    column="g_type"    />
+        <result property="categoryId"    column="g_category_id"    />
+        <result property="name"    column="g_name"    />
+        <result property="image"    column="g_image"    />
+        <result property="number"    column="g_number"    />
+        <result property="supplier"    column="g_supplier"    />
+        <result property="costPrice"    column="g_cost_price"    />
+        <result property="platformPrice"    column="g_platform_price"    />
+        <result property="cashPrice"    column="g_cash_price"    />
+        <result property="postage"    column="g_postage"    />
+        <result property="soldQuantity"    column="g_sold_quantity"    />
+        <result property="inventory"    column="g_inventory"    />
+        <result property="listingTime"    column="g_listing_time"    />
+        <result property="offShelfTime"    column="g_off_shelf_time"    />
+        <result property="status"    column="g_status"    />
+        <result property="sort"    column="g_sort"    />
+        <result property="isDebris"    column="is_debris"    />
+        <result property="pSId"    column="g_p_s_id"    />
+        <result property="describe"    column="g_describe"    />
+    </resultMap>
+
+
+    <sql id="selectWarehouseDetailsVo">
+        select wd.id, wd.user_id, wd.wid, wd.orders_id, wd.goods_id,wd.`type`, wd.goods_image, wd.goods_name, wd.source, wd.quantity, wd.price, wd.state, wd.create_time, wd.update_by, wd.update_time, wd.create_by, wd.remark ,wd.is_novice, wd.assistance_num,wd.virtual_product_type,
+         g.`id` as g_id, g.`type` as g_type,g.`category_id` as g_category_id, g.`name` as g_name, g.image as g_image, g.`number` as g_number, g.`supplier` as g_supplier, g.`cost_price` as g_cost_price, g.`platform_price` as g_platform_price, g.`cash_price` as g_cash_price,g.`postage` as g_postage, g.`sold_quantity` as g_sold_quantity, g.`inventory` as g_inventory, g.`listing_time` as g_listing_time, g.`off_shelf_time` as g_off_shelf_time, g.`status` as g_status, g.`sort` as g_sort,g.is_debris as g_is_debris, g.`p_s_id` as g_p_s_id, g.`describe` as g_describe,
+         g.cash_price as g_cash_price,wd.cash_price
+        from warehouse_details wd
+        left join goods g on wd.goods_id = g.id
+    </sql>
+
+    <select id="selectWarehouseDetailsList" parameterType="WarehouseDetails" resultMap="WarehouseDetailsResult">
+        <include refid="selectWarehouseDetailsVo"/>
+        <where>
+            <if test="userId != null "> and wd.user_id = #{userId}</if>
+            <if test="wid != null "> and wd.wid = #{wid}</if>
+            <if test="ordersId != null "> and wd.orders_id = #{ordersId}</if>
+            <if test="goodsId != null "> and wd.goods_id = #{goodsId}</if>
+            <if test="type != null  and type != ''"> and wd.`type` = #{type}</if>
+            <if test="goodsImage != null  and goodsImage != ''"> and wd.goods_image = #{goodsImage}</if>
+            <if test="goodsName != null  and goodsName != ''"> and wd.goods_name like concat('%', #{goodsName}, '%')</if>
+            <if test="source != null  and source != ''"> and wd.source = #{source}</if>
+            <if test="quantity != null "> and wd.quantity = #{quantity}</if>
+            <if test="price != null  and price != ''"> and wd.price = #{price}</if>
+            <if test="cashPrice != null  and cashPrice != ''"> and wd.cash_price = #{cashPrice}</if>
+            <if test="state != null "> and wd.state = #{state}</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and wd.create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
+            <if test="updateBy != null  and updateBy != ''"> and wd.update_by like concat('%', #{updateBy}, '%')</if>
+            <if test="params.beginUpdateTime != null and params.beginUpdateTime != '' and params.endUpdateTime != null and params.endUpdateTime != ''"> and wd.update_time between #{params.beginUpdateTime} and #{params.endUpdateTime}</if>
+            <if test="createBy != null  and createBy != ''"> and wd.create_by like concat('%', #{createBy}, '%')</if>
+            <if test="isNovice != null  and isNovice != ''"> and wd.is_novice = #{isNovice}</if>
+            <if test="assistanceNum != null "> and wd.assistance_num = #{assistanceNum}</if>
+            <if test="params.sort != null and params.sort != '' ">
+                order by CAST(wd.price AS signed) ${params.sort}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectWarehouseDetailsById" parameterType="Long" resultMap="WarehouseDetailsResult">
+        <include refid="selectWarehouseDetailsVo"/>
+        where wd.id = #{id}
+    </select>
+
+    <insert id="insertWarehouseDetails" parameterType="WarehouseDetails" useGeneratedKeys="true" keyProperty="id">
+        insert into warehouse_details
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="wid != null">wid,</if>
+            <if test="ordersId != null">orders_id,</if>
+            <if test="goodsId != null">goods_id,</if>
+            <if test="type != null">`type`,</if>
+            <if test="goodsImage != null and goodsImage != ''">goods_image,</if>
+            <if test="goodsName != null and goodsName != ''">goods_name,</if>
+            <if test="source != null">source,</if>
+            <if test="quantity != null">quantity,</if>
+            <if test="price != null">price,</if>
+            <if test="cashPrice != null">cash_price,</if>
+            <if test="state != null">state,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="remark != null">remark,</if>
+            <if test="isNovice != null">is_novice,</if>
+            <if test="assistanceNum != null">assistance_num,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="wid != null">#{wid},</if>
+            <if test="ordersId != null">#{ordersId},</if>
+            <if test="goodsId != null">#{goodsId},</if>
+            <if test="type != null">#{type},</if>
+            <if test="goodsImage != null and goodsImage != ''">#{goodsImage},</if>
+            <if test="goodsName != null and goodsName != ''">#{goodsName},</if>
+            <if test="source != null">#{source},</if>
+            <if test="quantity != null">#{quantity},</if>
+            <if test="price != null">#{price},</if>
+            <if test="cashPrice != null">#{cashPrice},</if>
+            <if test="state != null">#{state},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="isNovice != null">#{isNovice},</if>
+            <if test="assistanceNum != null">#{assistanceNum},</if>
+        </trim>
+    </insert>
+
+    <update id="updateWarehouseDetails" parameterType="WarehouseDetails">
+        update warehouse_details
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="wid != null">wid = #{wid},</if>
+            <if test="ordersId != null">orders_id = #{ordersId},</if>
+            <if test="goodsId != null">goods_id = #{goodsId},</if>
+            <if test="type != null">`type` = #{type},</if>
+            <if test="goodsImage != null and goodsImage != ''">goods_image = #{goodsImage},</if>
+            <if test="goodsName != null and goodsName != ''">goods_name = #{goodsName},</if>
+            <if test="source != null">source = #{source},</if>
+            <if test="quantity != null">quantity = #{quantity},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="cashPrice != null">cash_price = #{cashPrice},</if>
+            <if test="state != null">state = #{state},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="isNovice != null">is_novice = #{isNovice},</if>
+            <if test="assistanceNum != null">assistance_num = #{assistanceNum},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWarehouseDetailsById" parameterType="Long">
+        delete from warehouse_details where id = #{id}
+    </delete>
+
+    <delete id="deleteWarehouseDetailsByIds" parameterType="String">
+        delete from warehouse_details where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="getByGoodsId" parameterType="Long" resultMap="WarehouseDetailsResult">
+        <include refid="selectWarehouseDetailsVo"/>
+        where wd.user_id = #{userId} and wd.goods_id = #{goodsId}
+    </select>
+
+    <delete id="deleteWarehouseDetailsByUserId" parameterType="Long">
+        delete from warehouse_details where user_id in
+        <foreach collection="array" item="userId" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </delete>
+
+    <select id="getByVPType" resultMap="WarehouseDetailsResult" parameterType="WarehouseDetails">
+        select * from warehouse_details
+        where user_id = #{userId} and virtual_product_type = #{virtualProductType} LIMIT  1
+    </select>
+
+</mapper>

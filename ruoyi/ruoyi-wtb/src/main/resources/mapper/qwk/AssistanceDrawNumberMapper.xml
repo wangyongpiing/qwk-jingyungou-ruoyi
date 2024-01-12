@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.qwk.mapper.AssistanceDrawNumberMapper">
+
+    <resultMap type="AssistanceDrawNumber" id="AssistanceDrawNumberResult">
+        <result property="id"    column="id"    />
+        <result property="assistanceId"    column="assistance_id"    />
+        <result property="lotteryDrawSum"    column="lottery_draw_sum"    />
+        <result property="noLotteryDrawNum"    column="no_lottery_draw_num"    />
+        <result property="vacuumingNum"    column="vacuuming_num"    />
+        <result property="actualExtractionNum"    column="actual_extraction_num"    />
+        <result property="isFree"    column="is_free"    />
+        <result property="isLotteryAllowed"    column="is_lottery_allowed"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectAssistanceDrawNumberVo">
+        select id, assistance_id, lottery_draw_sum,is_lottery_allowed, no_lottery_draw_num,vacuuming_num,actual_extraction_num,is_free,create_by, create_time, update_by, update_time from assistance_draw_number
+    </sql>
+
+    <select id="selectAssistanceDrawNumberList" parameterType="AssistanceDrawNumber" resultMap="AssistanceDrawNumberResult">
+        <include refid="selectAssistanceDrawNumberVo"/>
+        <where>
+            <if test="assistanceId != null  and assistanceId != ''"> and assistance_id = #{assistanceId}</if>
+            <if test="lotteryDrawSum != null "> and lottery_draw_sum = #{lotteryDrawSum}</if>
+            <if test="noLotteryDrawNum != null "> and no_lottery_draw_num = #{noLotteryDrawNum}</if>
+            <if test="isFree != null "> and is_free = #{isFree}</if>
+        </where>
+    </select>
+
+    <select id="selectAssistanceDrawNumberById" parameterType="Long" resultMap="AssistanceDrawNumberResult">
+        <include refid="selectAssistanceDrawNumberVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertAssistanceDrawNumber" parameterType="AssistanceDrawNumber" useGeneratedKeys="true" keyProperty="id">
+        insert into assistance_draw_number
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="assistanceId != null">assistance_id,</if>
+            <if test="lotteryDrawSum != null">lottery_draw_sum,</if>
+            <if test="noLotteryDrawNum != null">no_lottery_draw_num,</if>
+            <if test="vacuumingNum != null">vacuuming_num,</if>
+            <if test="actualExtractionNum != null">actual_extraction_num,</if>
+            <if test="isLotteryAllowed != null">is_lottery_allowed,</if>
+            <if test="isFree != null ">is_free,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="assistanceId != null">#{assistanceId},</if>
+            <if test="lotteryDrawSum != null">#{lotteryDrawSum},</if>
+            <if test="noLotteryDrawNum != null">#{noLotteryDrawNum},</if>
+            <if test="vacuumingNum != null">#{vacuumingNum},</if>
+            <if test="actualExtractionNum != null">#{actualExtractionNum},</if>
+            <if test="isLotteryAllowed != null">#{isLotteryAllowed},</if>
+            <if test="isFree != null ">#{isFree},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAssistanceDrawNumber" parameterType="AssistanceDrawNumber">
+        update assistance_draw_number
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="assistanceId != null">assistance_id = #{assistanceId},</if>
+            <if test="lotteryDrawSum != null">lottery_draw_sum = #{lotteryDrawSum},</if>
+            <if test="noLotteryDrawNum != null">no_lottery_draw_num = #{noLotteryDrawNum},</if>
+            <if test="vacuumingNum != null">vacuuming_num=#{vacuumingNum},</if>
+            <if test="actualExtractionNum != null">actual_extraction_num=#{actualExtractionNum},</if>
+            <if test="isLotteryAllowed != null">is_lottery_allowed=#{isLotteryAllowed},</if>
+            <if test="isFree != null">is_free = #{isFree},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAssistanceDrawNumberById" parameterType="Long">
+        delete from assistance_draw_number where id = #{id}
+    </delete>
+
+    <delete id="deleteAssistanceDrawNumberByIds" parameterType="String">
+        delete from assistance_draw_number where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

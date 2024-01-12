@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.qwk.mapper.TheChartsMapper">
+    
+    <resultMap type="TheCharts" id="TheChartsResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="nikeName"    column="nike_name"    />
+        <result property="avatar"    column="avatar"    />
+        <result property="gameId"    column="game_id"    />
+        <result property="combatPower"    column="combat_power"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectTheChartsVo">
+        select id, user_id, nike_name, avatar, game_id, combat_power, create_by, create_time, update_by, update_time from the_charts
+    </sql>
+
+    <select id="selectTheChartsList" parameterType="TheCharts" resultMap="TheChartsResult">
+        <include refid="selectTheChartsVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="nikeName != null  and nikeName != ''"> and nike_name like concat('%', #{nikeName}, '%')</if>
+            <if test="avatar != null  and avatar != ''"> and avatar = #{avatar}</if>
+            <if test="gameId != null "> and game_id = #{gameId}</if>
+            <if test="combatPower != null  and combatPower != ''"> and combat_power = #{combatPower}</if>
+        </where>
+    </select>
+    
+    <select id="selectTheChartsById" parameterType="Long" resultMap="TheChartsResult">
+        <include refid="selectTheChartsVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTheCharts" parameterType="TheCharts">
+        insert into the_charts
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="nikeName != null and nikeName != ''">nike_name,</if>
+            <if test="avatar != null and avatar != ''">avatar,</if>
+            <if test="gameId != null">game_id,</if>
+            <if test="combatPower != null">combat_power,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="nikeName != null and nikeName != ''">#{nikeName},</if>
+            <if test="avatar != null and avatar != ''">#{avatar},</if>
+            <if test="gameId != null">#{gameId},</if>
+            <if test="combatPower != null">#{combatPower},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTheCharts" parameterType="TheCharts">
+        update the_charts
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="nikeName != null and nikeName != ''">nike_name = #{nikeName},</if>
+            <if test="avatar != null and avatar != ''">avatar = #{avatar},</if>
+            <if test="combatPower != null">combat_power = #{combatPower},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where user_id = #{userId} and game_id = #{gameId}
+    </update>
+
+    <delete id="deleteTheChartsById" parameterType="Long">
+        delete from the_charts where id = #{id}
+    </delete>
+
+    <delete id="deleteTheChartsByIds" parameterType="String">
+        delete from the_charts where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectTheChartsByGameId" parameterType="Long" resultMap="TheChartsResult">
+        <include refid="selectTheChartsVo"/>
+        WHERE game_id = #{gameId}
+        ORDER BY CAST(combat_power AS UNSIGNED) DESC,update_time DESC LIMIT 10
+    </select>
+
+    <select id="selectTheChartsByUserId" parameterType="Long" resultMap="TheChartsResult">
+        SELECT a.*	FROM (
+            SELECT p.*,CONVERT((@i :=@i + 1),CHAR) AS remark FROM the_charts p,(SELECT @i:=0) AS it
+                WHERE p.game_id = #{gameId} ORDER BY CAST(p.combat_power AS UNSIGNED) DESC
+        )AS a HAVING user_id = #{userId}
+    </select>
+
+
+
+</mapper>

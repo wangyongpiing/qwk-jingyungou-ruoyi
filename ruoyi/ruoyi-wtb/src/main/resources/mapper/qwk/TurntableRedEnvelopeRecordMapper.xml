@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.qwk.mapper.TurntableRedEnvelopeRecordMapper">
+
+    <resultMap type="TurntableRedEnvelopeRecord" id="TurntableRedEnvelopeRecordResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userHead"    column="user_head"    />
+        <result property="userName"    column="user_name"    />
+        <result property="isReceive"    column="is_receive"    />
+        <result property="lotteryId"    column="lottery_id"    />
+        <result property="money"    column="money"    />
+        <result property="source"    column="source"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectTurntableRedEnvelopeRecordVo">
+        select id, user_id, user_head, user_name, is_receive,lottery_id, money, source, remark, create_by, create_time, update_by, update_time from turntable_red_envelope_record
+    </sql>
+
+    <select id="selectTurntableRedEnvelopeRecordList" parameterType="TurntableRedEnvelopeRecord" resultMap="TurntableRedEnvelopeRecordResult">
+        <include refid="selectTurntableRedEnvelopeRecordVo"/>
+        <where>
+            <if test="lotteryId != null  and lotteryId != ''"> and lottery_id = #{lotteryId}</if>
+            <if test="money != null  and money != ''"> and money = #{money}</if>
+            <if test="source != null  and source != ''"> and source = #{source}</if>
+            <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
+            <if test="userHead != null  and userHead != ''"> and user_head = #{userHead}</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="isReceive != null  and isReceive != ''"> and is_receive = #{isReceive}</if>
+            <if test="sourceStr != null  and sourceStr != ''"> and source in ('1','2')</if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectTurntableRedEnvelopeRecordById" parameterType="Long" resultMap="TurntableRedEnvelopeRecordResult">
+        <include refid="selectTurntableRedEnvelopeRecordVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTurntableRedEnvelopeRecord" parameterType="TurntableRedEnvelopeRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into turntable_red_envelope_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="userHead != null">user_head,</if>
+            <if test="userName != null">user_name,</if>
+            <if test="isReceive != null">is_receive,</if>
+            <if test="lotteryId != null">lottery_id,</if>
+            <if test="money != null">money,</if>
+            <if test="source != null">source,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="userHead != null">#{userHead},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="isReceive != null">#{isReceive},</if>
+            <if test="lotteryId != null">#{lotteryId},</if>
+            <if test="money != null">#{money},</if>
+            <if test="source != null">#{source},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTurntableRedEnvelopeRecord" parameterType="TurntableRedEnvelopeRecord">
+        update turntable_red_envelope_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="userHead != null">user_head = #{userHead},</if>
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="isReceive != null">is_receive = #{isReceive},</if>
+            <if test="lotteryId != null">lottery_id = #{lotteryId},</if>
+            <if test="money != null">money = #{money},</if>
+            <if test="source != null">source = #{source},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTurntableRedEnvelopeRecordById" parameterType="Long">
+        delete from turntable_red_envelope_record where id = #{id}
+    </delete>
+
+    <delete id="deleteTurntableRedEnvelopeRecordByIds" parameterType="String">
+        delete from turntable_red_envelope_record where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

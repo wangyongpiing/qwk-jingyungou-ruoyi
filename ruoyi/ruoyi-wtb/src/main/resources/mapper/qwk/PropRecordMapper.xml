@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.qwk.mapper.PropRecordMapper">
+    
+    <resultMap type="PropRecord" id="PropRecordResult">
+        <result property="id"    column="id"    />
+        <result property="gameId"    column="game_id"    />
+        <result property="gameLevel"    column="game_level"    />
+        <result property="userId"    column="user_id"    />
+        <result property="propId"    column="prop_id"    />
+        <result property="propNum"    column="prop_num"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectPropRecordVo">
+        select id, game_id, game_level, user_id, prop_id, prop_num, create_by, create_time, update_by, update_time from prop_record
+    </sql>
+
+    <select id="selectPropRecordList" parameterType="PropRecord" resultMap="PropRecordResult">
+        <include refid="selectPropRecordVo"/>
+        <where>  
+            <if test="gameId != null "> and game_id = #{gameId}</if>
+            <if test="gameLevel != null "> and game_level = #{gameLevel}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="propId != null "> and prop_id = #{propId}</if>
+            <if test="propNum != null "> and prop_num = #{propNum}</if>
+            <if test="createBy != null  and createBy != ''"> and create_by = #{createBy}</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
+            <if test="updateBy != null  and updateBy != ''"> and update_by = #{updateBy}</if>
+            <if test="params.beginUpdateTime != null and params.beginUpdateTime != '' and params.endUpdateTime != null and params.endUpdateTime != ''"> and update_time between #{params.beginUpdateTime} and #{params.endUpdateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectPropRecordById" parameterType="Long" resultMap="PropRecordResult">
+        <include refid="selectPropRecordVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPropRecord" parameterType="PropRecord">
+        insert into prop_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="gameId != null">game_id,</if>
+            <if test="gameLevel != null">game_level,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="propId != null">prop_id,</if>
+            <if test="propNum != null">prop_num,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="gameId != null">#{gameId},</if>
+            <if test="gameLevel != null">#{gameLevel},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="propId != null">#{propId},</if>
+            <if test="propNum != null">#{propNum},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePropRecord" parameterType="PropRecord">
+        update prop_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="gameId != null">game_id = #{gameId},</if>
+            <if test="gameLevel != null">game_level = #{gameLevel},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="propId != null">prop_id = #{propId},</if>
+            <if test="propNum != null">prop_num = #{propNum},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePropRecordById" parameterType="Long">
+        delete from prop_record where id = #{id}
+    </delete>
+
+    <delete id="deletePropRecordByIds" parameterType="String">
+        delete from prop_record where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

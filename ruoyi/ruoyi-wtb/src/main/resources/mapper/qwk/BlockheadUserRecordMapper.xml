@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.qwk.mapper.BlockheadUserRecordMapper">
+
+    <resultMap type="BlockheadUserRecord" id="BlockheadUserRecordResult">
+        <result property="id"    column="id"    />
+        <result property="number"    column="number"    />
+        <result property="level"    column="level"    />
+        <result property="userId"    column="user_id"    />
+        <result property="selectOne"    column="select_one"    />
+        <result property="selectTwo"    column="select_two"    />
+        <result property="selectThr"    column="select_thr"    />
+        <result property="status"    column="status"    />
+        <result property="getCoin"    column="get_coin"    />
+        <result property="created"    column="created"    />
+    </resultMap>
+
+    <sql id="selectBlockheadUserRecordVo">
+        select id, number, level, user_id, select_one, select_two, select_thr, status, get_coin, created from blockhead_user_record
+    </sql>
+
+    <select id="selectBlockheadUserRecordList" parameterType="BlockheadUserRecord" resultMap="BlockheadUserRecordResult">
+        <include refid="selectBlockheadUserRecordVo"/>
+        <where>
+            <if test="number != null  and number != ''"> and number = #{number}</if>
+            <if test="level != null "> and level = #{level}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="selectOne != null "> and select_one = #{selectOne}</if>
+            <if test="selectTwo != null "> and select_two = #{selectTwo}</if>
+            <if test="selectThr != null "> and select_thr = #{selectThr}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="getCoin != null "> and get_coin = #{getCoin}</if>
+            <if test="created != null "> and DATE_FORMAT(created,'%Y-%m-%d') = DATE_FORMAT(#{created},'%Y-%m-%d')</if>
+        </where>
+    </select>
+
+    <select id="selectBlockheadUserRecordById" parameterType="String" resultMap="BlockheadUserRecordResult">
+        <include refid="selectBlockheadUserRecordVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertBlockheadUserRecord" parameterType="BlockheadUserRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into blockhead_user_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="number != null and number != ''">number,</if>
+            <if test="level != null">level,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="selectOne != null">select_one,</if>
+            <if test="selectTwo != null">select_two,</if>
+            <if test="selectThr != null">select_thr,</if>
+            <if test="status != null">status,</if>
+            <if test="getCoin != null">get_coin,</if>
+            <if test="created != null">created,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="number != null and number != ''">#{number},</if>
+            <if test="level != null">#{level},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="selectOne != null">#{selectOne},</if>
+            <if test="selectTwo != null">#{selectTwo},</if>
+            <if test="selectThr != null">#{selectThr},</if>
+            <if test="status != null">#{status},</if>
+            <if test="getCoin != null">#{getCoin},</if>
+            <if test="created != null">#{created},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBlockheadUserRecord" parameterType="BlockheadUserRecord">
+        update blockhead_user_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="number != null and number != ''">number = #{number},</if>
+            <if test="level != null">level = #{level},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="selectOne != null">select_one = #{selectOne},</if>
+            <if test="selectTwo != null">select_two = #{selectTwo},</if>
+            <if test="selectThr != null">select_thr = #{selectThr},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="getCoin != null">get_coin = #{getCoin},</if>
+            <if test="created != null">created = #{created},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBlockheadUserRecordById" parameterType="String">
+        delete from blockhead_user_record where id = #{id}
+    </delete>
+
+    <delete id="deleteBlockheadUserRecordByIds" parameterType="String">
+        delete from blockhead_user_record where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

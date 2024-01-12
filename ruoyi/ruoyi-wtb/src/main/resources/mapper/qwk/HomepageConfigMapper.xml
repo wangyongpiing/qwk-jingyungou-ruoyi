@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.qwk.mapper.HomepageConfigMapper">
+
+    <resultMap type="HomepageConfig" id="HomepageConfigResult">
+        <result property="id"    column="id"    />
+        <result property="sort"    column="sort"    />
+        <result property="classify"    column="classify"    />
+        <result property="title"    column="title"    />
+        <result property="imgUrl"    column="img_url"    />
+        <result property="wide"    column="wide"    />
+        <result property="high"    column="high"    />
+        <result property="linkAddress"    column="Link_Address"    />
+        <result property="creationTime"    column="creation_time"    />
+        <result property="state"    column="state"    />
+        <result property="displayStatus"    column="display_status"    />
+        <result property="displayLocation"    column="display_location"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectHomepageConfigVo">
+        select id, sort, classify, title, img_url, wide, high, Link_Address, creation_time, state, display_status, display_location, start_time, end_time, update_by, update_time, create_by, create_time from homepage_config
+    </sql>
+
+    <select id="selectHomepageConfigList" parameterType="HomepageConfig" resultMap="HomepageConfigResult">
+        <include refid="selectHomepageConfigVo"/>
+        <where>
+            <if test="sort != null "> and sort = #{sort}</if>
+            <if test="classify != null "> and classify = #{classify}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="imgUrl != null  and imgUrl != ''"> and img_url = #{imgUrl}</if>
+            <if test="wide != null  and wide != ''"> and wide = #{wide}</if>
+            <if test="high != null  and high != ''"> and high = #{high}</if>
+            <if test="linkAddress != null  and linkAddress != ''"> and Link_Address = #{linkAddress}</if>
+            <if test="params.beginCreationTime != null and params.beginCreationTime != '' and params.endCreationTime != null and params.endCreationTime != ''"> and creation_time between #{params.beginCreationTime} and #{params.endCreationTime}</if>
+            <if test="state != null "> and state = #{state}</if>
+            <if test="displayStatus != null "> and display_status = #{displayStatus}</if>
+            <if test="displayLocation != null "> and display_location = #{displayLocation}</if>
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="endTime != null "> and end_time = #{endTime}</if>
+        </where>
+    </select>
+
+    <select id="selectHomepageConfigById" parameterType="Long" resultMap="HomepageConfigResult">
+        <include refid="selectHomepageConfigVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertHomepageConfig" parameterType="HomepageConfig" useGeneratedKeys="true" keyProperty="id">
+        insert into homepage_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sort != null">sort,</if>
+            <if test="classify != null">classify,</if>
+            <if test="title != null and title != ''">title,</if>
+            <if test="imgUrl != null and imgUrl != ''">img_url,</if>
+            <if test="wide != null">wide,</if>
+            <if test="high != null">high,</if>
+            <if test="linkAddress != null">Link_Address,</if>
+            <if test="creationTime != null">creation_time,</if>
+            <if test="state != null">state,</if>
+            <if test="displayStatus != null">display_status,</if>
+            <if test="displayLocation != null">display_location,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="sort != null">#{sort},</if>
+            <if test="classify != null">#{classify},</if>
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="imgUrl != null and imgUrl != ''">#{imgUrl},</if>
+            <if test="wide != null">#{wide},</if>
+            <if test="high != null">#{high},</if>
+            <if test="linkAddress != null">#{linkAddress},</if>
+            <if test="creationTime != null">#{creationTime},</if>
+            <if test="state != null">#{state},</if>
+            <if test="displayStatus != null">#{displayStatus},</if>
+            <if test="displayLocation != null">#{displayLocation},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateHomepageConfig" parameterType="HomepageConfig">
+        update homepage_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="classify != null">classify = #{classify},</if>
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="imgUrl != null and imgUrl != ''">img_url = #{imgUrl},</if>
+            <if test="wide != null">wide = #{wide},</if>
+            <if test="high != null">high = #{high},</if>
+            <if test="linkAddress != null">Link_Address = #{linkAddress},</if>
+            <if test="creationTime != null">creation_time = #{creationTime},</if>
+            <if test="state != null">state = #{state},</if>
+            <if test="displayStatus != null">display_status = #{displayStatus},</if>
+            <if test="displayLocation != null">display_location = #{displayLocation},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteHomepageConfigById" parameterType="Long">
+        delete from homepage_config where id = #{id}
+    </delete>
+
+    <delete id="deleteHomepageConfigByIds" parameterType="String">
+        delete from homepage_config where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="getHomepageConfigByClassify" parameterType="Long" resultMap="HomepageConfigResult">
+        <include refid="selectHomepageConfigVo"/>
+        WHERE classify = #{classify}
+        AND state = 1
+        ORDER BY sort DESC
+        LIMIT #{number}
+    </select>
+
+</mapper>

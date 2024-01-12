@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.qwk.mapper.HomepageGameMapper">
+
+    <resultMap type="HomepageGame" id="HomepageGameResult">
+        <result property="id"    column="id"    />
+        <result property="gameName"    column="game_name"    />
+        <result property="gamePicture"    column="game_picture"    />
+        <result property="gameContent"    column="game_content"    />
+        <result property="popular"    column="popular"    />
+        <result property="gameUrl"    column="game_url"    />
+        <result property="sort"    column="sort"    />
+        <result property="openness"    column="openness"    />
+        <result property="gameButtons" column="game_buttons" />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectHomepageGameVo">
+        select id, game_name, game_picture, game_content, popular, game_url, sort, openness,game_buttons,create_by, create_time, update_by, update_time from homepage_game
+    </sql>
+
+    <select id="selectHomepageGameList" parameterType="HomepageGame" resultMap="HomepageGameResult">
+        <include refid="selectHomepageGameVo"/>
+        <where>
+            <if test="gameName != null  and gameName != ''"> and game_name like concat('%', #{gameName}, '%')</if>
+            <if test="gamePicture != null  and gamePicture != ''"> and game_picture = #{gamePicture}</if>
+            <if test="gameContent != null  and gameContent != ''"> and game_content = #{gameContent}</if>
+            <if test="popular != null  and popular != ''"> and popular = #{popular}</if>
+            <if test="gameUrl != null  and gameUrl != ''"> and game_url = #{gameUrl}</if>
+            <if test="sort != null  and sort != ''"> and sort = #{sort}</if>
+        </where>
+        order by sort asc
+    </select>
+
+    <select id="selectHomepageGameById" parameterType="Long" resultMap="HomepageGameResult">
+        <include refid="selectHomepageGameVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertHomepageGame" parameterType="HomepageGame" useGeneratedKeys="true" keyProperty="id">
+        insert into homepage_game
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="gameName != null">game_name,</if>
+            <if test="gamePicture != null">game_picture,</if>
+            <if test="gameContent != null">game_content,</if>
+            <if test="popular != null">popular,</if>
+            <if test="gameUrl != null">game_url,</if>
+            <if test="sort != null">sort,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="gameName != null">#{gameName},</if>
+            <if test="gamePicture != null">#{gamePicture},</if>
+            <if test="gameContent != null">#{gameContent},</if>
+            <if test="popular != null">#{popular},</if>
+            <if test="gameUrl != null">#{gameUrl},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHomepageGame" parameterType="HomepageGame">
+        update homepage_game
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="gameName != null">game_name = #{gameName},</if>
+            <if test="gamePicture != null">game_picture = #{gamePicture},</if>
+            <if test="gameContent != null">game_content = #{gameContent},</if>
+            <if test="popular != null">popular = #{popular},</if>
+            <if test="gameUrl != null">game_url = #{gameUrl},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteHomepageGameById" parameterType="Long">
+        delete from homepage_game where id = #{id}
+    </delete>
+
+    <delete id="deleteHomepageGameByIds" parameterType="String">
+        delete from homepage_game where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
