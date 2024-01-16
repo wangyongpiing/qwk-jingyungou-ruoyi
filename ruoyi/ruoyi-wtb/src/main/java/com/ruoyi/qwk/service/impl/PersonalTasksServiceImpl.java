@@ -81,10 +81,12 @@ public class PersonalTasksServiceImpl implements IPersonalTasksService
         personalTasks.setIsRelease("1");
         personalTasks.setUserId(user.getUserId());
         //获取全部
-        if("0".equals(personalTasks.getTypeCode())){
+        if("0".equals(personalTasks.getTypeCode()) || "1".equals(personalTasks.getTypeCode()) ){
             //获取每日任务
             personalTasks.setIsDaily("1");
-            personalTasks.setTypeCode("");
+            if("0".equals(personalTasks.getTypeCode())){
+                personalTasks.setTypeCode("");
+            }
             List<PersonalTasks> dailyList = personalTasksMapper.selectUserTasksList(personalTasks);
             //获取首页任务
             personalTasks.setIsDaily("0");
@@ -96,8 +98,6 @@ public class PersonalTasksServiceImpl implements IPersonalTasksService
             list = Stream.concat(homePageList.stream(), dailyList.stream())
                     .collect(Collectors.toList());
             return AjaxResult.success(list);
-        }else if("1".equals(personalTasks.getTypeCode())){
-            personalTasks.setStartTime(null);
         }
         list = personalTasksMapper.selectUserTasksList(personalTasks);
         return AjaxResult.success(list);

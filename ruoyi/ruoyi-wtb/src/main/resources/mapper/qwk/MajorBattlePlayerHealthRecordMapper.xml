@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.qwk.mapper.MajorBattlePlayerHealthRecordMapper">
+    
+    <resultMap type="MajorBattlePlayerHealthRecord" id="MajorBattlePlayerHealthRecordResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="totalBloodVolume"    column="total_blood_volume"    />
+        <result property="reduceHp"    column="reduce_hp"    />
+        <result property="remainingHp"    column="remaining_hp"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectMajorBattlePlayerHealthRecordVo">
+        select id, user_id, total_blood_volume, reduce_hp, remaining_hp, create_by, create_time, update_by, update_time from major_battle_player_health_record
+    </sql>
+
+    <select id="selectMajorBattlePlayerHealthRecordList" parameterType="MajorBattlePlayerHealthRecord" resultMap="MajorBattlePlayerHealthRecordResult">
+        <include refid="selectMajorBattlePlayerHealthRecordVo"/>
+        <where>  
+            <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
+            <if test="totalBloodVolume != null  and totalBloodVolume != ''"> and total_blood_volume = #{totalBloodVolume}</if>
+            <if test="reduceHp != null  and reduceHp != ''"> and reduce_hp = #{reduceHp}</if>
+            <if test="remainingHp != null  and remainingHp != ''"> and remaining_hp = #{remainingHp}</if>
+        </where>
+    </select>
+    
+    <select id="selectMajorBattlePlayerHealthRecordById" parameterType="Long" resultMap="MajorBattlePlayerHealthRecordResult">
+        <include refid="selectMajorBattlePlayerHealthRecordVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertMajorBattlePlayerHealthRecord" parameterType="MajorBattlePlayerHealthRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into major_battle_player_health_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="totalBloodVolume != null">total_blood_volume,</if>
+            <if test="reduceHp != null">reduce_hp,</if>
+            <if test="remainingHp != null">remaining_hp,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="totalBloodVolume != null">#{totalBloodVolume},</if>
+            <if test="reduceHp != null">#{reduceHp},</if>
+            <if test="remainingHp != null">#{remainingHp},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMajorBattlePlayerHealthRecord" parameterType="MajorBattlePlayerHealthRecord">
+        update major_battle_player_health_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="totalBloodVolume != null">total_blood_volume = #{totalBloodVolume},</if>
+            <if test="reduceHp != null">reduce_hp = #{reduceHp},</if>
+            <if test="remainingHp != null">remaining_hp = #{remainingHp},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMajorBattlePlayerHealthRecordById" parameterType="Long">
+        delete from major_battle_player_health_record where id = #{id}
+    </delete>
+
+    <delete id="deleteMajorBattlePlayerHealthRecordByIds" parameterType="String">
+        delete from major_battle_player_health_record where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

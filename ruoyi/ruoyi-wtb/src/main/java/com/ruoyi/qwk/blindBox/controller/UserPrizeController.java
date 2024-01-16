@@ -140,18 +140,18 @@ public class UserPrizeController extends BaseController
             put("isDebris","0");
         }});
         List<UserPrize> list = userPrizeService.selectUserPrizeList(userPrize);
-        //获取生肖卡
-        Goods goods = new Goods();
-        goods.setCategoryId(18L);
-        List<Goods> goodsList = goodsService.selectGoodsList(goods);
-        goodsList = goodsList.stream().sorted(Comparator.comparing(Goods::getCashPrice)).collect(Collectors.toList());
-        goodsList.forEach(s->{
-            UserPrize up = new UserPrize();
-            up.setGoodsId(s.getId());
-            up.setGoods(s);
-            up.setType("2");
-            list.add(up);
-        });
+//        //获取生肖卡
+//        Goods goods = new Goods();
+//        goods.setCategoryId(18L);
+//        List<Goods> goodsList = goodsService.selectGoodsList(goods);
+//        goodsList = goodsList.stream().sorted(Comparator.comparing(Goods::getCashPrice)).collect(Collectors.toList());
+//        goodsList.forEach(s->{
+//            UserPrize up = new UserPrize();
+//            up.setGoodsId(s.getId());
+//            up.setGoods(s);
+//            up.setType("2");
+//            list.add(up);
+//        });
         TableDataInfo dataTable = getDataTable(list);
         return success(dataTable);
     }
@@ -161,6 +161,7 @@ public class UserPrizeController extends BaseController
      */
     @GetMapping("/getUserPrizeList/all")
     @ApiOperation("查询用户盲盒爆出奖品列表(盲盒游戏)")
+
     public AjaxResult getUserPrizeListAll(UserPrize userPrize) {
         PageUtils.startPage();
         PageUtils.orderBy("u.update_time desc");

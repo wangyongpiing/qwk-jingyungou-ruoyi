@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.qwk.mapper.BigBattleMonsterMapper">
+    
+    <resultMap type="BigBattleMonster" id="BigBattleMonsterResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="code"    column="code"    />
+        <result property="generationTime"    column="generation_time"    />
+        <result property="deathTime"    column="death_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectBigBattleMonsterVo">
+        select id, user_id, code, generation_time, death_time, create_by, create_time, update_by, update_time from big_battle_monster
+    </sql>
+
+    <select id="selectBigBattleMonsterList" parameterType="BigBattleMonster" resultMap="BigBattleMonsterResult">
+        <include refid="selectBigBattleMonsterVo"/>
+        <where>  
+            <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
+            <if test="code != null  and code != ''"> and code = #{code}</if>
+            <if test="generationTime != null "> and generation_time = #{generationTime}</if>
+            <if test="deathTime != null "> and death_time = #{deathTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectBigBattleMonsterById" parameterType="Long" resultMap="BigBattleMonsterResult">
+        <include refid="selectBigBattleMonsterVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBigBattleMonster" parameterType="BigBattleMonster" useGeneratedKeys="true" keyProperty="id">
+        insert into big_battle_monster
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="code != null">code,</if>
+            <if test="generationTime != null">generation_time,</if>
+            <if test="deathTime != null">death_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="code != null">#{code},</if>
+            <if test="generationTime != null">#{generationTime},</if>
+            <if test="deathTime != null">#{deathTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBigBattleMonster" parameterType="BigBattleMonster">
+        update big_battle_monster
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="code != null">code = #{code},</if>
+            <if test="generationTime != null">generation_time = #{generationTime},</if>
+            <if test="deathTime != null">death_time = #{deathTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBigBattleMonsterById" parameterType="Long">
+        delete from big_battle_monster where id = #{id}
+    </delete>
+
+    <delete id="deleteBigBattleMonsterByIds" parameterType="String">
+        delete from big_battle_monster where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
